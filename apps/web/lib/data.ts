@@ -1,3 +1,10 @@
+export const headerNav = [
+    {title: 'Home', url: '/'},
+    {title: 'About', url: '/about'},
+    {title: 'Contact Us', url: '/contact'},
+    {title: 'Blog', url: '/blog'},
+];
+
 export const footerNav = [
     {name: 'Services', links: [
         {title: 'Bonus program', url: '/'},
@@ -23,3 +30,22 @@ export const footerSocial = [
     {name: 'Tiktok', src: '/icon/tiktok.png', url: '/'},
     {name: 'Instagram', src: '/icon/instagram.png', url: '/'},
 ];
+
+export const animations = {
+  fadeUp: {
+    initial: { opacity: 0, y: 20 },
+    animate: { opacity: 1, y: 0 },
+  },
+  fadeDown: {
+    initial: { opacity: 0, y: -20 },
+    animate: { opacity: 1, y: 0 },
+  },
+  fadeIn: {
+    initial: { opacity: 0 },
+    animate: { opacity: 1 },
+  },
+  scaleIn: {
+    initial: { opacity: 0, scale: 0.9 },
+    animate: { opacity: 1, scale: 1 },
+  },
+};

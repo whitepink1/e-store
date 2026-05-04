@@ -26,7 +26,7 @@ const Footer = () => {
                 </div>
             ))}
         </div>
-        <div className='flex justify-center gap-8 mt-8 lg:justify-start lg: gap-12'>
+        <div className='flex justify-center gap-8 mt-8 lg:justify-start lg:gap-12'>
             {footerSocial.map(link => (
                 <Link key={link.name} href={link.url}>
                     <Image 
