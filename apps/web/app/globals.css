@@ -4,14 +4,25 @@
   --color-primary-900: #0D100C;
   --color-black: #000;
   --color-white: #fff;
+  --color-gray-50: #EDEDED;
   --color-gray-100: #CFCFCF;
   --color-gray-200: #656565;
+  --color-gray-300: #909090;
+  --color-gray-600: #353535;
+  --background-image-main-dark: linear-gradient(180deg, #211C24 0%, #211C24 100%);
   --spacing-page: 1220px;
 }
 
+@utility px-basic {
+  @apply px-3 xl:px-40
+}
 @utility h4 {
   @apply font-semibold text-base
 }
+@utility p-grid {
+  @apply text-sm font-medium text-gray-300 leading-6
+}
+
 
 html {
   height: -webkit-fill-available;

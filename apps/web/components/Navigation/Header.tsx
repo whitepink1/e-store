@@ -10,9 +10,8 @@ import { usePathname } from "next/navigation";
 
 const Header = () => {
   const pathname = usePathname();
-  console.log(pathname)
   return (
-    <div className='flex justify-between items-center px-3 py-6 xl:px-40 lg:py-4'>
+    <div className='flex justify-between items-center px-basic py-6 lg:py-4'>
       <Link href="/">
         <Image
           src='/icon/logo_black.png'
