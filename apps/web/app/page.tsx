@@ -1,5 +1,8 @@
 import Image from "next/image";
-import Button from "../components/shared/Button";
+import Link from "next/link";
+import Button, { ButtonVariant } from "../components/shared/Button";
+import { browseCategory, homepageSlideOptions } from "../lib/data";
+import HotOffers from "../components/layouts/HotOffers";
 
 
 export default function Home() {
@@ -114,8 +117,41 @@ export default function Home() {
           </div>
         </div>
       </section>
-      <section>
-        
+      <section className="px-basic bg-white-50 py-16 lg:py-20">
+        <div className="w-full flex justify-between items-center">
+          <p className="text-2xl font-medium">Browse By Category</p>
+          <div className="flex justify-center gap-4">
+            <Image src='/icon/arrow-left.png' height={32} width={32} alt="Arrow left" className="cursor-pointer"/>
+            <Image src='/icon/arrow-right.png' height={32} width={32} alt="Arrow left" className="cursor-pointer"/>
+          </div>
+        </div>
+        <div className="grid grid-cols-2 gap-6 mt-12 lg:mt-8 lg:justify-between lg:flex lg:items-center">
+          {browseCategory.map(item => (
+            <Link 
+              key={item.name} 
+              href={item.url} 
+              className="flex flex-col items-center p-4 bg-gray-50 rounded-2xl lg:min-w-36 max-lg:gap-2">
+                <Image
+                  src={item.img}
+                  height={48}
+                  width={48}
+                  alt={item.name}/>
+                <p>{item.name}</p>
+            </Link>
+          ))}
+        </div>
+      </section>
+      <HotOffers />
+      <section className="">
+        <div className="hidden grid-cols-4 lg:grid">
+          {homepageSlideOptions.map(item => (
+            <div key={item.name} className="flex flex-col pb-14">
+              <h4>{item.name}</h4>
+              <p>{item.description}</p>
+              <Button href={item.url} variant={item.variant as ButtonVariant}>Shop Now</Button>
+            </div>
+          ))}
+        </div>
       </section>
     </div>
   );

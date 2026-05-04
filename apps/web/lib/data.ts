@@ -49,3 +49,19 @@ export const animations = {
     animate: { opacity: 1, scale: 1 },
   },
 };
+
+export const browseCategory = [
+  {name: 'Phones', url: '/', img: '/icon/phones.png'},
+  {name: 'Smart Watches', url: '/', img: '/icon/smart_watches.png'},
+  {name: 'Cameras', url: '/', img: '/icon/cameras.png'},
+  {name: 'Headphones', url: '/', img: '/icon/headphones.png'},
+  {name: 'Computers', url: '/', img: '/icon/computers.png'},
+  {name: 'Gaming', url: '/', img: '/icon/gaming.png'},
+];
+
+export const homepageSlideOptions = [
+  {name: 'Popular Products', description: 'iPad combines a magnificent 10.2-inch Retina display, incredible performance, multitasking and ease of use.', img: '/images/', url: '/', bg: '', variant: 'black'},
+  {name: 'Ipad Pro', description: 'iPad combines a magnificent 10.2-inch Retina display, incredible performance, multitasking and ease of use.', img: '/images/', url: '/', bg: '', variant: 'black'},
+  {name: 'Samsung Galaxy ', description: 'iPad combines a magnificent 10.2-inch Retina display, incredible performance, multitasking and ease of use.', img: '/images/', url: '/', bg: '', variant: 'black'},
+  {name: 'Macbook Pro', description: 'iPad combines a magnificent 10.2-inch Retina display, incredible performance, multitasking and ease of use.', img: '/images/', url: '/', bg: '', variant: 'white'},
+];

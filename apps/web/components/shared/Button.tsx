@@ -2,11 +2,13 @@
 import { motion } from "motion/react";
 import Link from 'next/link';
 
+export type ButtonVariant = "white" | "black" | "whiteFill" | "blackFill";
+
 interface ButtonProps {
   children: React.ReactNode;
   href?: string;
   onClick?: () => void;
-  variant?: "white" | "black" | "whiteFill" | "blackFill";
+  variant?: ButtonVariant;
   className?: string;
   type?: "button" | "submit";
 }
