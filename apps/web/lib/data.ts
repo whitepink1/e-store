@@ -51,12 +51,12 @@ export const animations = {
 };
 
 export const browseCategory = [
-  {name: 'Phones', url: '/', img: '/icon/phones.png'},
-  {name: 'Smart Watches', url: '/', img: '/icon/smart_watches.png'},
-  {name: 'Cameras', url: '/', img: '/icon/cameras.png'},
-  {name: 'Headphones', url: '/', img: '/icon/headphones.png'},
-  {name: 'Computers', url: '/', img: '/icon/computers.png'},
-  {name: 'Gaming', url: '/', img: '/icon/gaming.png'},
+  {name: 'Phones', url: '/catalog/smartphones', img: '/icon/phones.png'},
+  {name: 'Smart Watches', url: '/catalog/smartwatches', img: '/icon/smart_watches.png'},
+  {name: 'Cameras', url: '/catalog/cameras', img: '/icon/cameras.png'},
+  {name: 'Headphones', url: '/catalog/headphones', img: '/icon/headphones.png'},
+  {name: 'Computers', url: '/catalog/computers', img: '/icon/computers.png'},
+  {name: 'Gaming', url: '/catalog/gaming', img: '/icon/gaming.png'},
 ];
 
 export const homepageSlideOptions = [

@@ -11,7 +11,7 @@ import { usePathname } from "next/navigation";
 const Header = () => {
   const pathname = usePathname();
   return (
-    <div className='flex justify-between items-center px-basic py-6 lg:py-4'>
+    <div className='flex justify-between items-center px-basic py-6 border-b border-gray-500/90 lg:py-4'>
       <Link href="/">
         <Image
           src='/icon/logo_black.png'
