@@ -25,6 +25,9 @@
 @utility p-grid {
   @apply text-sm font-medium text-gray-300 leading-6
 }
+@utility error-input {
+  @apply border-red-500/75 bg-red-50
+}
 
 
 html {

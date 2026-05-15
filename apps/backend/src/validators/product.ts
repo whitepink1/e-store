@@ -26,7 +26,7 @@ const BaseVariant = z.object({
   discount: z.number().min(0).max(100).default(0),
   finalPrice: z.number().positive(),
   stock: z.number().nonnegative().max(999),
-  images: z.array(z.string()).min(1),
+  images: z.array(z.string().url()).min(1, "Add at least one image"),
   color: z.string(),
 });
 

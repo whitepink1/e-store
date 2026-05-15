@@ -42,6 +42,12 @@ const page = () => {
                 >
                 Edit Product
                 </button>
+                <button 
+                onClick={() => setActiveTab('products')}
+                className={`w-full text-left p-2 rounded cursor-pointer ${activeTab === 'products' ? 'bg-black/85 text-white' : 'hover:bg-gray-100'}`}
+                >
+                My products
+                </button>
             </aside>
             <main className="flex-1 p-8">
                 {renderTab()}
