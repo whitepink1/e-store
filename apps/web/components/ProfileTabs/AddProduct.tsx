@@ -5,9 +5,11 @@ import { ProductSchema, CATEGORIES, CATEGORY_BRANDS } from '../../lib/validation
 import Image from 'next/image';
 import slugify from 'slugify';
 import { getPublicIdFromUrl } from '../../utils/getPublicId';
+import { createProductAction } from '../../app/actions/product';
+
 
 const AddProduct = () => {
-    const { register, handleSubmit, watch, control, formState: { errors } } = useForm({
+    const { register, handleSubmit, formState: { isSubmitting }, reset, setValue, getValues, setError, watch, control, formState: { errors } } = useForm({
         resolver: zodResolver(ProductSchema),
         mode: "onTouched",
         defaultValues: { 
@@ -164,6 +166,17 @@ const AddProduct = () => {
         );
     };
 
+    const updateFinalPrice = (index: number) => {
+        const price = Number(getValues(`variants.${index}.price`)) || 0;
+        const discount = Number(getValues(`variants.${index}.discount`)) || 0;
+        
+        const final = Math.max(0, price - discount);
+
+        setValue(`variants.${index}.finalPrice`, final, { 
+            shouldValidate: true 
+        });
+    };
+
     const onInvalid = (errors: any) => {
         console.error("Errors:", errors);
     };
@@ -173,7 +186,22 @@ const AddProduct = () => {
             ...data,
             slug: slugify(data.title, { lower: true, strict: true, locale: 'en' })
         };
-        console.log("Data:", finalData);
+        const result = await createProductAction(finalData);
+
+        if (!result.success) {
+            if (result.error === "slug_exists") {
+                setError("slug", { 
+                    type: "manual", 
+                    message: "Product with this slug already exist, change your title." 
+                });
+
+            } else {
+                alert("Error: " + result.message);
+            }
+            return;
+        }
+        alert("Product successfully created!");
+        reset();
     };
     
     return (
@@ -275,8 +303,13 @@ const AddProduct = () => {
             <div id='title'>
                 <label className='font-semibold'>Title</label>
                 <input {...register('title')} 
-                    className={`w-full border p-2 mt-1 ${errors.title && 'error-input'}`}
+                    className={`w-full border p-2 mt-1 ${errors.title && 'error-input'} ${errors.slug && "error-input"}`}
                     placeholder="Product name" />
+                {errors.slug && (
+                    <p className="text-red-500/75 text-xs mt-1">
+                    {errors.slug.message}
+                    </p>
+                )}
             </div>
             <div id='brand'>
                 <label className='font-semibold'>Brand</label>
@@ -343,6 +376,7 @@ const AddProduct = () => {
                     const price = watch(`variants.${index}.price`) || 0;
                     const discount = watch(`variants.${index}.discount`) || 0;
                     const calculatedFinalPrice = Math.round(price - (price * (discount / 100)));
+                    console.log(calculatedFinalPrice);
                     return (
                     <div key={variant.id} className="p-6 border-2 border-gray-100 rounded-2xl relative bg-white hover:border-gray-200 transition-all">
                         <button
@@ -374,18 +408,17 @@ const AddProduct = () => {
 
                             <div className="space-y-1">
                                 <label className="text-xs font-bold uppercase text-gray-500">Basic Price (USD)</label>
-                                <input type="number" {...register(`variants.${index}.price`, { valueAsNumber: true })} 
+                                <input type="number" {...register(`variants.${index}.price`, { valueAsNumber: true, onChange: () => updateFinalPrice(index)})} 
                                     className={`w-full border p-2 rounded ${get(errors, `variants.${index}.price`) && 'error-input'} `} />
                             </div>
                             <div className="space-y-1">
                                 <label className="text-xs font-bold uppercase text-gray-500">Discount (%)</label>
-                                <input type="number" {...register(`variants.${index}.discount`, { valueAsNumber: true })} 
+                                <input type="number" {...register(`variants.${index}.discount`, { valueAsNumber: true, onChange: () => updateFinalPrice(index)})} 
                                     className={`w-full border p-2 rounded ${get(errors, `variants.${index}.discount`) && 'error-input'} `} />
                             </div>
                             <div className="space-y-1">
                                 <label className="text-xs font-bold uppercase text-gray-500">Final Price (USD)</label>
                                 <input type="number" {...register(`variants.${index}.finalPrice`, { valueAsNumber: true })} 
-                                    value={calculatedFinalPrice} 
                                     readOnly 
                                     className="w-full border p-2 rounded bg-green-50 font-bold text-green-700 outline-none"/>
                             </div>
@@ -447,7 +480,8 @@ const AddProduct = () => {
             </div>
             <button
                 type="submit"
-                className="w-full py-4 bg-green-600/85 text-white font-bold rounded-xl shadow-green-200 shadow-lg hover:bg-green-700/85 transition-all"
+                disabled={isSubmitting}
+                className={`w-full py-4  text-white font-bold rounded-xl shadow-lg  transition-all ${isSubmitting ? "bg-gray-400 shadow-gray-400" : "bg-green-600/85 hover:bg-green-700/85 shadow-green-200"}`}
             >
                 Create product
             </button>
