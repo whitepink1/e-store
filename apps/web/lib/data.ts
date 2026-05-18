@@ -109,3 +109,10 @@ export const catalogFilter: CatalogFilterConfig = {
     { name: 'Controller Included', type: 'controller', fields: ['1 Gamepad', '2 Gamepads', 'None (Console Only)'] },
   ],
 };
+
+export const catalogOrder = [
+  {name: 'By Name', type: 'name'},
+  {name: 'Price Low to High', type: 'price_asc'},
+  {name: 'Price High to Low', type: 'price_desc'},
+  {name: 'By Rating', type: 'rating'},
+];

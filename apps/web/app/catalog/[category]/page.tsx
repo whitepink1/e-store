@@ -1,20 +1,57 @@
 'use server'
-import React from 'react'
+import React, { Suspense } from 'react'
 import { catalogFilter } from '../../../lib/data'
 import { CATEGORY_BRANDS } from '../../../lib/validations/product';
 import { FilterGroup } from '../../../components/shared/FilterGroup';
 import { getProductsAction } from '../../actions/product';
 import CatalogHeader from '../../../components/Products/CatalogHeader';
+import ProductCatalogCard from '../../../components/Products/ProductCatalogCard';
+import ProductCatalogCardSkeleton from '../../../components/Products/ProductCatalogCardSkeleton';
 
 interface CatalogPageProps {
   params: Promise<{ category: string }>;
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
+type ProductDataFromCard = React.ComponentProps<typeof ProductCatalogCard>['product'];
+
+const AsyncProductsGrid = async ({ category, filters }: { category: string, filters: any }) => {
+  const response = await getProductsAction({ category, filters });
+
+  return (
+    <>
+      <CatalogHeader total={response.data?.totalItems || 0} order={filters.order}/>
+      <div className='grid grid-cols-3 gap-4'>
+        {response.data?.products && response.data.products.length > 0 ? 
+          response.data.products.map((product: ProductDataFromCard) => (
+            <ProductCatalogCard key={product.slug} product={product}/>
+          ))
+        :
+          <p className="col-span-full text-center py-12 text-gray-500">
+            No products found matching your filters
+          </p>
+        }
+      </div>
+    </>
+  );
+};
+
+const GridSkeleton = () => (
+  <div className="w-full flex flex-col gap-4">
+    <div className="w-full flex justify-between animate-pulse"><div className="h-6 bg-gray-200/75 w-32 rounded"></div><div className="h-10 bg-gray-200/75 w-64 rounded"></div></div>
+    <div className='grid grid-cols-3 gap-4'>
+      {Array.from({ length: 6 }).map((_, i) => <ProductCatalogCardSkeleton key={i} />)}
+    </div>
+  </div>
+);
+
 const CatalogPage = async ({params, searchParams} : CatalogPageProps) => {
   const { category } = await params;
   const currentSearchParams = await searchParams;
-  const response = await getProductsAction();
+  const response = await getProductsAction({
+    category,
+    filters: currentSearchParams
+  });
   console.log(response);
   const currentFilter = catalogFilter[category];
   const brandFields = CATEGORY_BRANDS[category as keyof typeof CATEGORY_BRANDS] 
@@ -26,15 +63,17 @@ const CatalogPage = async ({params, searchParams} : CatalogPageProps) => {
     fields: brandFields
   };
   return (
-    <div className='flex gap-8'>
+    <div className='flex gap-8 mb-20'>
       <section className='w-64 flex flex-col items-start gap-6 mb-40'>
         <FilterGroup item={currentBrands} open={true} />
         {currentFilter && currentFilter.map((item, index) => (
           <FilterGroup key={index} item={item} open={false}/>
         ))}
       </section>
-      <main>
-        <CatalogHeader total={response.data?.totalItems || 0}/>
+      <main className='grow'>
+        <Suspense key={JSON.stringify(currentSearchParams)} fallback={<GridSkeleton />}>
+          <AsyncProductsGrid category={category} filters={currentSearchParams} />
+        </Suspense>
       </main>
     </div>
   )

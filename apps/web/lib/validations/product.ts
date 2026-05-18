@@ -164,3 +164,7 @@ export const ProductSchema = z.discriminatedUnion("category", [
 ]);
 
 export type Product = z.infer<typeof ProductSchema>;
+
+export interface ProductCardProps {
+  product: Product;
+}

@@ -26,7 +26,7 @@ const Button = ({
     white: "bg-transparent text-white border-1",
     black: "bg-transparent text-black border-1",
     whiteFill: "bg-transparent border-2 border-white text-white hover:bg-white hover:text-black",
-    blackFill: "bg-transparent text-gray-400 hover:text-white hover:bg-white/5",
+    blackFill: "bg-black/90 text-white hover:text-white/90 hover:bg-black/95",
   };
   const fullClassName = `${baseStyles} ${variants[variant]} ${className}`.trim();
   const motionProps = {

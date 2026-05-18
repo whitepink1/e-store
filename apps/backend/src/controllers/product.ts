@@ -1,13 +1,24 @@
 import { Request, Response, NextFunction } from 'express';
 import { Product } from "../models/Product";
 
-export const getProducts = async (_req: Request, res: Response, next: NextFunction) => {
+export const getProducts = async (req: Request, res: Response, next: NextFunction) => {
 
   try {
+    const { category, brand, order, screen_type } = req.query;
+    const filterObject: any = {};
+
+    let sortObject: any = { createdAt: -1 };
+    if (order === 'price_asc') sortObject = { price: 1 };
+    if (order === 'price_desc') sortObject = { price: -1 };
+    if (order === 'name') sortObject = { title: -1 };
+
+
+    if (category) filterObject.category = category;
+    if (brand) filterObject.brand = brand;
     const [totalItems, products] = await Promise.all([
-      Product.countDocuments(),
-      Product.find()
-        .select('title price discount slug images category') 
+      Product.find(filterObject).sort(sortObject).countDocuments(),
+      Product.find().find(filterObject).sort(sortObject)
+        .select('title slug category variants') 
         .sort({ createdAt: -1 })                  
         //.skip((page - 1) * perPage)
         //.limit(perPage)

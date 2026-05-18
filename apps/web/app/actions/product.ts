@@ -1,5 +1,10 @@
 'use server'
 
+interface GetProductsParams {
+  category: string;
+  filters: { [key: string]: string | string[] | undefined };
+}
+
 export async function createProductAction(formData: any) {
     const BACKEND_URL = process.env.EXTERNAL_BACKEND_URL;
     //const API_TOKEN = process.env.INTERNAL_BACKEND_TOKEN;
@@ -37,10 +42,22 @@ export async function createProductAction(formData: any) {
     }
 }
 
-export async function getProductsAction() {
+export async function getProductsAction({ category, filters }: GetProductsParams) {
     const BACKEND_URL = process.env.EXTERNAL_BACKEND_URL;
     try {
-        const response = await fetch(`${BACKEND_URL}/products`, {
+        const queryParams = new URLSearchParams();
+        queryParams.append('category', category);
+        Object.entries(filters).forEach(([key, value]) => {
+            if (value !== undefined) {
+                if (Array.isArray(value)) {
+                    value.forEach(val => queryParams.append(key, val));
+                } else {
+                    queryParams.append(key, value);
+                }
+            }
+        });
+        const fullUrl = `${BACKEND_URL}/products?${queryParams.toString()}`;
+        const response = await fetch(fullUrl, {
             cache: 'no-store' 
         });
         if (!response.ok) {

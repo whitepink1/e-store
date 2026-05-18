@@ -1,4 +1,5 @@
 'use client'
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useState } from 'react';
 
 interface FilterGroupProps {
@@ -8,6 +9,24 @@ interface FilterGroupProps {
 
 export const FilterGroup = ({ item, open }: FilterGroupProps) => {
   const [isOpen, setIsOpen] = useState(open || false);
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const activeFilters = searchParams.getAll(item.type);
+
+  const handleCheckboxChange = (option: string) => {
+    const params = new URLSearchParams(searchParams.toString());
+
+    if (activeFilters.includes(option)) {
+      const updatedFilters = activeFilters.filter(val => val !== option);
+      params.delete(item.type);
+      updatedFilters.forEach(val => params.append(item.type, val));
+    } else {
+      params.append(item.type, option);
+    }
+
+    //console.log(item.type, option);
+    router.push(`?${params.toString()}`);
+  };
 
   return (
     <div className="w-full">
@@ -26,11 +45,15 @@ export const FilterGroup = ({ item, open }: FilterGroupProps) => {
       </button>
       {isOpen && (
         <div className="flex flex-col gap-2 mt-4 pl-1 animate-fadeIn">
-          {item.fields.map((option) => (
+          {item.fields.map((option) => { 
+            const isChecked = activeFilters.includes(option);
+            return (
             <label key={option} className="flex items-center gap-2 text-sm text-gray-600 cursor-pointer">
               <input 
                 type="checkbox" 
                 value={option}
+                checked={isChecked}
+                onChange={() => handleCheckboxChange(option)}
                 className="rounded 
                     border
                     border-gray-10 
@@ -49,7 +72,7 @@ export const FilterGroup = ({ item, open }: FilterGroupProps) => {
               />
               <span className='font-medium text-base'>{option}</span>
             </label>
-          ))}
+          )})}
         </div>
       )}
     </div>
