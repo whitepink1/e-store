@@ -24,7 +24,6 @@ export const FilterGroup = ({ item, open }: FilterGroupProps) => {
       params.append(item.type, option);
     }
 
-    //console.log(item.type, option);
     router.push(`?${params.toString()}`);
   };
 

@@ -376,7 +376,6 @@ const AddProduct = () => {
                     const price = watch(`variants.${index}.price`) || 0;
                     const discount = watch(`variants.${index}.discount`) || 0;
                     const calculatedFinalPrice = Math.round(price - (price * (discount / 100)));
-                    console.log(calculatedFinalPrice);
                     return (
                     <div key={variant.id} className="p-6 border-2 border-gray-100 rounded-2xl relative bg-white hover:border-gray-200 transition-all">
                         <button

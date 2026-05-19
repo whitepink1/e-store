@@ -54,5 +54,19 @@ export const createProduct = async (req: Request, res: Response, next: NextFunct
     } catch (err) {
         return next(err);
     }
-}
+};
+
+export const getProduct = async (req: Request, res: Response, next: NextFunction) => {
+  const slug = req.params.slug;
+  try {
+    const product = await Product.findOne({slug: slug});
+    res.status(200).json({
+      message: 'Fetched products successfully.',
+      product: product,
+    });
+  } catch (err: any) {
+    if (!err.statusCode) err.statusCode = 500;
+    return next(err);
+  }
+};
 

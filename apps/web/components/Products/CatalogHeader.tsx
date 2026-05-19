@@ -26,7 +26,7 @@ const CatalogHeader = ({total = 0, order}: CatalogHeaderProps) => {
                 <span className='text-[20px] text-black'> {total}</span>
             </p>
             <select 
-                className='w-64' 
+                className='w-64 border border-gray-500 p-1' 
                 value={currentOrderValue}
                 onChange={handleOrderChange}>
                 {catalogOrder.map(item => {

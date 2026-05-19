@@ -116,3 +116,24 @@ export const catalogOrder = [
   {name: 'Price High to Low', type: 'price_desc'},
   {name: 'By Rating', type: 'rating'},
 ];
+
+export const productColors = [
+  { name: 'black', color: '#1C1C1E' },
+  { name: 'white', color: '#F8F8F8' },
+  { name: 'silver', color: '#C0C0C0' },
+  { name: 'graphite', color: '#4A4A4A' },
+  { name: 'navy', color: '#1E3A8A' },
+  { name: 'skyBlue', color: '#7DD3FC' },
+  { name: 'blue', color: '#3B82F6' },
+  { name: 'mint', color: '#A7F3D0' },
+  { name: 'forestGreen', color: '#166534' },
+  { name: 'pink', color: '#F9C8D6' },
+  { name: 'blush', color: '#F8A5B8' },
+  { name: 'lavender', color: '#E6D9FF' },
+  { name: 'peach', color: '#FFCCB3' },
+  { name: 'lemon', color: '#FEF08C' },
+  { name: 'gold', color: '#EAB308' },
+  { name: 'red', color: '#B91C1C' },
+  { name: 'coral', color: '#FCA5A5' },
+  { name: 'sage', color: '#94A38B' },
+] as const;

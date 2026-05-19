@@ -21,13 +21,13 @@ const AsyncProductsGrid = async ({ category, filters }: { category: string, filt
   return (
     <>
       <CatalogHeader total={response.data?.totalItems || 0} order={filters.order}/>
-      <div className='grid grid-cols-3 gap-4'>
+      <div className='w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-y-6 mt-6'>
         {response.data?.products && response.data.products.length > 0 ? 
           response.data.products.map((product: ProductDataFromCard) => (
             <ProductCatalogCard key={product.slug} product={product}/>
           ))
         :
-          <p className="col-span-full text-center py-12 text-gray-500">
+          <p className="col-span-full text-xl text-center py-12 text-gray-300">
             No products found matching your filters
           </p>
         }
@@ -63,14 +63,14 @@ const CatalogPage = async ({params, searchParams} : CatalogPageProps) => {
     fields: brandFields
   };
   return (
-    <div className='flex gap-8 mb-20'>
+    <div className='flex gap-8 mb-20 max-lg:mt-10'>
       <section className='w-64 flex flex-col items-start gap-6 mb-40'>
         <FilterGroup item={currentBrands} open={true} />
         {currentFilter && currentFilter.map((item, index) => (
           <FilterGroup key={index} item={item} open={false}/>
         ))}
       </section>
-      <main className='grow'>
+      <main className='w-full grow min-w-0'>
         <Suspense key={JSON.stringify(currentSearchParams)} fallback={<GridSkeleton />}>
           <AsyncProductsGrid category={category} filters={currentSearchParams} />
         </Suspense>
