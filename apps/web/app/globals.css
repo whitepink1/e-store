@@ -14,6 +14,10 @@
   --color-gray-35: #A7A7A7;
   --color-gray-50: #EDEDED;
   --color-gray-55: #4E4E4E;
+  --color-gray-60: #717171;
+  --color-gray-65: #9D9D9D;
+  --color-gray-70: #545454;
+  --color-gray-75: #CDCDCD;
   --color-gray-100: #CFCFCF;
   --color-gray-200: #656565;
   --color-gray-300: #909090;
@@ -35,6 +39,10 @@
 }
 @utility error-input {
   @apply border-red-500/75 bg-red-50
+}
+
+@utility details-button {
+  @apply border border-gray-70 rounded-lg py-3 px-14 text-sm font-medium
 }
 
 

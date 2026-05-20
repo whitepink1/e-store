@@ -137,3 +137,9 @@ export const productColors = [
   { name: 'coral', color: '#FCA5A5' },
   { name: 'sage', color: '#94A38B' },
 ] as const;
+
+export const deliveryDetailed = [
+  {name: 'Free Delivery', img: '/icon/delivery-truck.png', text: '1-2 day'},
+  {name: 'In Stock', img: '/icon/shop-com.png', text: 'Today'},
+  {name: 'Guaranteed', img: '/icon/verify.png', text: '1 year'},
+]

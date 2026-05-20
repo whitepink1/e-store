@@ -48,7 +48,7 @@ const ProductConfiguration = ({variants, configuration}: PropsVariants) => {
         const params = new URLSearchParams(searchParams.toString());
         params.set('v', selectedVariantIndex.toString());
 
-        router.replace(`${pathname}?${params.toString()}`);
+        router.replace(`${pathname}?${params.toString()}`, { scroll: false });
     };
 
     const HandleStorageVariant = (item: number) => {
@@ -60,7 +60,7 @@ const ProductConfiguration = ({variants, configuration}: PropsVariants) => {
         const params = new URLSearchParams(searchParams.toString());
         params.set('v', selectedVariantIndex.toString());
 
-        router.replace(`${pathname}?${params.toString()}`);
+        router.replace(`${pathname}?${params.toString()}`, { scroll: false });
     };
 
     const uniqueColors = [...new Set(variants.map(i => i.color))];

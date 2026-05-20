@@ -56,7 +56,7 @@ const SpecItemSchema = z.object({
   value: z.string().min(1), // "6.7"
 });
 
-const SpecGroupSchema = z.object({
+export const SpecGroupSchema = z.object({
   groupName: z.string().min(1), // "Screen", "CPU"
   specs: z.array(SpecItemSchema).min(1),
 });
@@ -164,6 +164,7 @@ export const ProductSchema = z.discriminatedUnion("category", [
 ]);
 
 export type Product = z.infer<typeof ProductSchema>;
+export type SpecificationGroup = z.infer<typeof SpecGroupSchema>;
 
 export interface ProductCardProps {
   product: Product;
