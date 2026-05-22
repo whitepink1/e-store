@@ -68,7 +68,7 @@ const page = async ({ params, searchParams }: PageProps) => {
           <p className='w-100 text-sm text-gray-20 lg:w-120 max-md:w-full'>{product.shortDescription.length < 200 ? product.shortDescription : product.shortDescription.slice(0, 200) + '...'}</p>
           <div className='w-100 flex justify-between my-2 lg:w-120 max-md:w-full max-sm:flex-col max-sm:gap-3'>
             <Button href='' variant='black' className='lg:w-56 max-md:w-[45%] max-sm:w-full'>Add to Wishlist</Button>
-            <Button href='' variant='blackFill' className={`lg:w-56 max-md:w-[45%] max-sm:w-full ${selectedVariant && selectedVariant.stock < 1 ? 'disabled bg-gray-20/75 hover:bg-gray-20/70' : ''}`}>Add to Card</Button>
+            <Button href='' variant='blackFill' className={`lg:w-56 max-md:w-[45%] max-sm:w-full ${selectedVariant && selectedVariant.stock < 1 ? 'disabled bg-gray-20/75 hover:bg-gray-20/70' : ''}`}>Add to Cart</Button>
           </div>
           <div className='w-full grid grid-cols-2 flex-wrap gap-7 max-md:flex max-md:justify-between lg:flex'>
             {deliveryDetailed.map(item => (

@@ -93,6 +93,12 @@ const GamingFilters = z.object({
   controller: z.string().min(1),
 });
 
+const Rating = z.object({
+  userId: z.string().min(1),
+  stars: z.number().min(1).max(5),
+  text: z.string().min(1).max(300)
+})
+
 // Main Scheme
 export const ProductSchema = z.discriminatedUnion("category", [
   z.object({
@@ -100,6 +106,8 @@ export const ProductSchema = z.discriminatedUnion("category", [
     title: z.string().min(1),
     brand: z.string(),
     slug: z.string().optional(),
+    userId: z.string().min(1).optional(),
+    rating: z.array(Rating).optional(),
     shortDescription: z.string().min(1),
     mainDescription: z.string().min(1),
     filterAttributes: SmartphoneFilters, // Filters
@@ -111,6 +119,8 @@ export const ProductSchema = z.discriminatedUnion("category", [
     title: z.string().min(1),
     brand: z.string(),
     slug: z.string().optional(),
+    userId: z.string().min(1).optional(),
+    rating: z.array(Rating).optional(),
     shortDescription: z.string().min(1),
     mainDescription: z.string().min(1),
     filterAttributes: SmartwatchesFilters, 
@@ -122,6 +132,8 @@ export const ProductSchema = z.discriminatedUnion("category", [
     title: z.string().min(1),
     brand: z.string(),
     slug: z.string().optional(),
+    userId: z.string().min(1).optional(),
+    rating: z.array(Rating).optional(),
     shortDescription: z.string().min(1),
     mainDescription: z.string().min(1),
     filterAttributes: CamerasFilters, 
@@ -133,6 +145,8 @@ export const ProductSchema = z.discriminatedUnion("category", [
     title: z.string().min(1),
     brand: z.string(),
     slug: z.string().optional(),
+    userId: z.string().min(1).optional(),
+    rating: z.array(Rating).optional(),
     shortDescription: z.string().min(1),
     mainDescription: z.string().min(1),
     filterAttributes: HeadphonesFilters, 
@@ -144,6 +158,8 @@ export const ProductSchema = z.discriminatedUnion("category", [
     title: z.string().min(1),
     brand: z.string(),
     slug: z.string().optional(),
+    userId: z.string().min(1).optional(),
+    rating: z.array(Rating).optional(),
     shortDescription: z.string().min(1),
     mainDescription: z.string().min(1),
     filterAttributes: ComputersFilters, 
@@ -155,6 +171,8 @@ export const ProductSchema = z.discriminatedUnion("category", [
     title: z.string().min(1),
     brand: z.string(),
     slug: z.string().optional(),
+    userId: z.string().min(1).optional(),
+    rating: z.array(Rating).optional(),
     shortDescription: z.string().min(1),
     mainDescription: z.string().min(1),
     filterAttributes: GamingFilters, 

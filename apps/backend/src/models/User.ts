@@ -1,7 +1,6 @@
-const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
+import { Schema, model, models } from "mongoose";
 
-const userSchema = new Schema({
+const UserMongooseSchema = new Schema({
     email: {
         type: String,
         required: true,
@@ -14,11 +13,9 @@ const userSchema = new Schema({
     },
     name: {
         type: String,
-        required: true,
     },
     surname: {
         type: String,
-        required: true,
     },
     cart: {
         items: [{
@@ -68,4 +65,4 @@ const userSchema = new Schema({
     }]
 },{ timestamps: true });
 
-module.exports = mongoose.model('User', userSchema);
+export const User = models.User || model('User', UserMongooseSchema);

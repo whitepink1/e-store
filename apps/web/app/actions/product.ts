@@ -1,4 +1,7 @@
 'use server'
+import { cookies } from 'next/headers';
+import jwt from 'jsonwebtoken';
+import { ProductSchema } from '../../lib/validations/product';
 
 interface GetProductsParams {
   category: string;
@@ -7,23 +10,61 @@ interface GetProductsParams {
 
 export async function createProductAction(formData: any) {
     const BACKEND_URL = process.env.EXTERNAL_BACKEND_URL;
-    //const API_TOKEN = process.env.INTERNAL_BACKEND_TOKEN;
+    
     try {
+        const cookieStore = await cookies();
+        const token = cookieStore.get('session_token')?.value;
+
+        if (!token) {
+            return {
+                success: false,
+                error: "unauthorized",
+                message: "You must be logged in to create products."
+            };
+        };
+
+        const decoded = jwt.verify(token, process.env.JWT_SECRET!) as { userId: string };
+
+        const fullData = {
+            ...formData,
+            userId: decoded.userId
+        };
+
+        const validatedFields = ProductSchema.safeParse(fullData);
+
+        if (!validatedFields.success) {
+            return { 
+                success: false, 
+                error: "validation_error", 
+                message: "Invalid fields mapping" 
+            };
+        };
+
         const response = await fetch(`${BACKEND_URL}/products/add-product`, {
             method: 'POST',
             headers: {
-            'Content-Type': 'application/json',
-            //'Authorization': `Bearer ${API_TOKEN}`
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
             },
-            body: JSON.stringify(formData)
+            body: JSON.stringify(fullData)
         });
+
         if (response.status === 409) {
             return { 
                 success: false, 
                 error: "slug_exists", 
                 message: "Slug already exist, change the title." 
             };
-        }
+        };
+
+        if (response.status === 401) {
+            return {
+                success: false,
+                error: "unauthorized",
+                message: "Session expired. Please log in again."
+            };
+        };
+        
         const result = await response.json();
         if (!response.ok) {
             return { 
@@ -34,13 +75,14 @@ export async function createProductAction(formData: any) {
         }
         return { success: true, data: result };
     } catch (error: any) {
+        console.log('Real error:' + error)
         return { 
             success: false, 
             error: "network_error", 
             message: "Server error" 
         };
     }
-}
+};
 
 export async function getProductsAction({ category, filters }: GetProductsParams) {
     const BACKEND_URL = process.env.EXTERNAL_BACKEND_URL;
@@ -90,7 +132,7 @@ export async function getProductsAction({ category, filters }: GetProductsParams
             message: error.message || "Network connection failed" 
         };
     }
-}
+};
 
 export async function getProductBySlugAction(slug: string) {
     const BACKEND_URL = process.env.EXTERNAL_BACKEND_URL;
@@ -125,4 +167,39 @@ export async function getProductBySlugAction(slug: string) {
             message: error.message || "Network connection failed" 
         };
     }
-}
+};
+
+export async function getMyProductsAction() {
+    const BACKEND_URL = process.env.EXTERNAL_BACKEND_URL;
+    try {
+        const cookieStore = await cookies();
+        const token = cookieStore.get('session_token')?.value;
+
+        if (!token) {
+            return { success: false, error: "unauthorized", message: "Please sign in to proceed!" };
+        };
+
+        const decoded = jwt.verify(token, process.env.JWT_SECRET!) as { userId: string };
+        const userId = decoded.userId;
+
+        const response = await fetch(`${BACKEND_URL}/products/my-products`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            cache: 'no-store' 
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+            return { success: false, error: "server_error", message: result.message || "Products fetching failed." };
+        };
+
+        return { success: true, data: result.products };
+    } catch(err) {
+        console.error("Error in getMyProductsAction:", err);
+        return { success: false, error: "network_error", message: "Error during server connection." };
+    }
+};

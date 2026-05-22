@@ -6,6 +6,7 @@ import helmet from 'helmet';
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import productRoutes from './routes/product';
+import userRoutes from './routes/user';
 
 
 dotenv.config();
@@ -19,6 +20,7 @@ app.use(morgan('dev'));
 app.use(express.json());
 
 app.use('/products', productRoutes);
+app.use('/', userRoutes);
 
 app.use((error: any, req: Request, res: Response, _next: NextFunction) => {
   const status = error.statusCode || 500;

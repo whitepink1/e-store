@@ -1,11 +1,18 @@
 'use client'
-import React, { useState } from 'react';
 import AddProduct from '../../components/ProfileTabs/AddProduct';
 import EditProduct from '../../components/ProfileTabs/EditProduct';
 import MyProducts from '../../components/ProfileTabs/MyProducts';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 const page = () => {
-    const [activeTab, setActiveTab] = useState('profile');
+    const searchParams = useSearchParams();
+    const router = useRouter();
+
+    const activeTab = searchParams.get('tab') || 'profile';
+
+    const changeTab = (tabName: string) => {
+        router.push(`/profile?tab=${tabName}`);
+    };
 
     const renderTab = () => {
         switch (activeTab) {
@@ -17,6 +24,8 @@ const page = () => {
             return <EditProduct />;
         case 'products':
             return <MyProducts />;
+        case 'favourite':
+            return <p>Favourite</p>;
         default:
             return <h2>Default</h2>;
         }
@@ -25,28 +34,34 @@ const page = () => {
         <div className="flex min-h-screen">
             <aside className="w-64 border-r border-gray-500/90 p-4 space-y-2">
                 <button 
-                onClick={() => setActiveTab('profile')}
-                className={`w-full text-left p-2 rounded cursor-pointer ${activeTab === 'profile' ? 'bg-black/85 text-white' : 'hover:bg-gray-100'}`}
-                >
-                Profile
+                    onClick={() => changeTab('profile')}
+                    className={`w-full text-left p-2 rounded cursor-pointer ${activeTab === 'profile' ? 'bg-black/85 text-white' : 'hover:bg-gray-100'}`}
+                    >
+                    Profile
                 </button>
                 <button 
-                onClick={() => setActiveTab('add-product')}
-                className={`w-full text-left p-2 rounded cursor-pointer ${activeTab === 'add-product' ? 'bg-black/85 text-white' : 'hover:bg-gray-100'}`}
-                >
-                Add Product
+                    onClick={() => changeTab('add-product')}
+                    className={`w-full text-left p-2 rounded cursor-pointer ${activeTab === 'add-product' ? 'bg-black/85 text-white' : 'hover:bg-gray-100'}`}
+                    >
+                    Add Product
                 </button>
                 <button 
-                onClick={() => setActiveTab('edit-product')}
-                className={`w-full text-left p-2 rounded cursor-pointer ${activeTab === 'edit-product' ? 'bg-black/85 text-white' : 'hover:bg-gray-100'}`}
-                >
-                Edit Product
+                    onClick={() => changeTab('edit-product')}
+                    className={`w-full text-left p-2 rounded cursor-pointer ${activeTab === 'edit-product' ? 'bg-black/85 text-white' : 'hover:bg-gray-100'}`}
+                    >
+                    Edit Product
                 </button>
                 <button 
-                onClick={() => setActiveTab('products')}
-                className={`w-full text-left p-2 rounded cursor-pointer ${activeTab === 'products' ? 'bg-black/85 text-white' : 'hover:bg-gray-100'}`}
-                >
-                My products
+                    onClick={() => changeTab('products')}
+                    className={`w-full text-left p-2 rounded cursor-pointer ${activeTab === 'products' ? 'bg-black/85 text-white' : 'hover:bg-gray-100'}`}
+                    >
+                    My products
+                </button>
+                <button 
+                    onClick={() => changeTab('favourite')}
+                    className={`w-full text-left p-2 rounded cursor-pointer ${activeTab === 'favourite' ? 'bg-black/85 text-white' : 'hover:bg-gray-100'}`}
+                    >
+                    Favourites
                 </button>
             </aside>
             <main className="flex-1 p-8">

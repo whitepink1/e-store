@@ -6,10 +6,23 @@ import HamburgerMenu from './HamburgerMenu';
 import NavSearch from './NavSearch';
 import { headerNav } from '../../lib/data';
 import NavUser from './NavUser';
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import { logoutAction } from '../../app/actions/auth';
 
-const Header = () => {
+interface HeaderProps {
+  isLoggedIn: boolean;
+}
+
+const Header = ({ isLoggedIn }: HeaderProps) => {
   const pathname = usePathname();
+  const router = useRouter();
+
+  const handleLogout = async () => {
+    await logoutAction();
+    router.push('/');
+    router.refresh();
+  };
+
   return (
     <div className='flex justify-between items-center px-basic py-6 border-b border-gray-500/90 lg:py-4'>
       <Link href="/">
@@ -31,7 +44,7 @@ const Header = () => {
           </Link>
         ))}
       </div>
-      <NavUser />
+      <NavUser isLoggedIn={isLoggedIn} onLogout={handleLogout}/>
     </div>
   )
 }

@@ -31,6 +31,12 @@ const ProductMongooseSchema = new Schema({
   title: { type: String, required: true },
   brand: { type: String, required: true, index: true },
   slug: { type: String, required: true, unique: true },
+  userId: {type: String, required: true, index: true},
+  rating: [{
+    userId: {type: String, required: true},
+    stars: {type: Number},
+    text: {type: String}
+  }],
   shortDescription: { type: String, required: true },
   mainDescription: { type: String, required: true },
   filterAttributes: { 

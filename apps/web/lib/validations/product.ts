@@ -93,6 +93,12 @@ const GamingFilters = z.object({
   controller: z.string().min(1),
 });
 
+const Rating = z.object({
+  userId: z.string().min(1),
+  stars: z.number().min(1).max(5),
+  text: z.string().min(1).max(300)
+})
+
 // Main Scheme
 export const ProductSchema = z.discriminatedUnion("category", [
   z.object({
@@ -100,10 +106,12 @@ export const ProductSchema = z.discriminatedUnion("category", [
     title: z.string().min(1),
     brand: z.string(),
     slug: z.string().optional(),
+    userId: z.string().optional(),
+    rating: z.array(Rating).optional(),
     shortDescription: z.string().min(1),
     mainDescription: z.string().min(1),
     filterAttributes: SmartphoneFilters, // Filters
-    specifications: z.array(SpecGroupSchema), // Desccription details
+    specifications: z.array(SpecGroupSchema).min(1), // Desccription details
     variants: z.array(SmartphoneVariant).min(1), // Price variations
   }),
   z.object({
@@ -111,10 +119,12 @@ export const ProductSchema = z.discriminatedUnion("category", [
     title: z.string().min(1),
     brand: z.string(),
     slug: z.string().optional(),
+    userId: z.string().optional(),
+    rating: z.array(Rating).optional(),
     shortDescription: z.string().min(1),
     mainDescription: z.string().min(1),
     filterAttributes: SmartwatchesFilters, 
-    specifications: z.array(SpecGroupSchema), 
+    specifications: z.array(SpecGroupSchema).min(1), 
     variants: z.array(SmartwatchesVariant).min(1),
   }),
   z.object({
@@ -122,10 +132,12 @@ export const ProductSchema = z.discriminatedUnion("category", [
     title: z.string().min(1),
     brand: z.string(),
     slug: z.string().optional(),
+    userId: z.string().optional(),
+    rating: z.array(Rating).optional(),
     shortDescription: z.string().min(1),
     mainDescription: z.string().min(1),
     filterAttributes: CamerasFilters, 
-    specifications: z.array(SpecGroupSchema), 
+    specifications: z.array(SpecGroupSchema).min(1), 
     variants: z.array(CamerasVariant).min(1),
   }),
   z.object({
@@ -133,10 +145,12 @@ export const ProductSchema = z.discriminatedUnion("category", [
     title: z.string().min(1),
     brand: z.string(),
     slug: z.string().optional(),
+    userId: z.string().optional(),
+    rating: z.array(Rating).optional(),
     shortDescription: z.string().min(1),
     mainDescription: z.string().min(1),
     filterAttributes: HeadphonesFilters, 
-    specifications: z.array(SpecGroupSchema), 
+    specifications: z.array(SpecGroupSchema).min(1), 
     variants: z.array(HeadphoneVariant).min(1),
   }),
   z.object({
@@ -144,10 +158,12 @@ export const ProductSchema = z.discriminatedUnion("category", [
     title: z.string().min(1),
     brand: z.string(),
     slug: z.string().optional(),
+    userId: z.string().optional(),
+    rating: z.array(Rating).optional(),
     shortDescription: z.string().min(1),
     mainDescription: z.string().min(1),
     filterAttributes: ComputersFilters, 
-    specifications: z.array(SpecGroupSchema), 
+    specifications: z.array(SpecGroupSchema).min(1), 
     variants: z.array(ComputersVariant).min(1),
   }),
   z.object({
@@ -155,10 +171,12 @@ export const ProductSchema = z.discriminatedUnion("category", [
     title: z.string().min(1),
     brand: z.string(),
     slug: z.string().optional(),
+    userId: z.string().optional(),
+    rating: z.array(Rating).optional(),
     shortDescription: z.string().min(1),
     mainDescription: z.string().min(1),
     filterAttributes: GamingFilters, 
-    specifications: z.array(SpecGroupSchema), 
+    specifications: z.array(SpecGroupSchema).min(1), 
     variants: z.array(GamingVariant).min(1),
   }),
 ]);

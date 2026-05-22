@@ -14,8 +14,6 @@ const AddProduct = () => {
         mode: "onTouched",
         defaultValues: { 
             category: 'smartphones',
-            specifications: [],
-            variants: []
         }
     });
 
@@ -100,7 +98,7 @@ const AddProduct = () => {
                 append(data.secure_url); 
             }
             } catch (error) {
-            console.error("Ошибка загрузки в Cloudinary:", error);
+            console.error("Cloudinary uploading failed:", error);
             }
         };
 
@@ -347,14 +345,14 @@ const AddProduct = () => {
                 <button
                     type="button"
                     onClick={() => append({ groupName: '', specs: [] })}
-                    className={`w-full py-2 border-2 border-dashed border-gray-300 rounded-lg hover:border-black transition-colors cursor-pointerw-full p-2 mt-1 ${errors.title && 'border-red-500/75 text-red-500/75'}`}
+                    className={`w-full py-2 border-2 border-dashed border-gray-300 rounded-lg hover:border-black transition-colors cursor-pointerw-full p-2 mt-1 ${errors.specifications && 'border-red-500/75 text-red-500/75'}`}
                 >
                     + Add new group
                 </button>
             </div>
             <div id='variants' className="space-y-6">
                 <div className="flex justify-between items-center pt-6">
-                    <h3 className="text-xl font-semibold">Variants (Color & Configuration)</h3>
+                    <h3 className={`text-xl font-semibold ${errors.variants && 'border-red-500/75 text-red-500/75'}`}>Variants (Color & Configuration)</h3>
                     <button
                         type="button"
                         onClick={() => appendVariant({
@@ -366,16 +364,13 @@ const AddProduct = () => {
                             color: '',
                             images: [],
                         })}
-                        className="bg-black text-white px-4 py-2 rounded-lg hover:bg-gray-800 transition-colors"
+                        className={`bg-black text-white px-4 py-2 rounded-lg hover:bg-gray-800 transition-colors ${errors.variants && 'bg-red-500/75'}`}
                     >
                         + Add variant
                     </button>
                 </div>
 
-                {variantFields.map((variant, index) => {
-                    const price = watch(`variants.${index}.price`) || 0;
-                    const discount = watch(`variants.${index}.discount`) || 0;
-                    const calculatedFinalPrice = Math.round(price - (price * (discount / 100)));
+                {variantFields.map((variant, index) => {                    
                     return (
                     <div key={variant.id} className="p-6 border-2 border-gray-100 rounded-2xl relative bg-white hover:border-gray-200 transition-all">
                         <button

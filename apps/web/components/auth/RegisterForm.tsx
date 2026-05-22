@@ -3,42 +3,52 @@ import React from 'react'
 import { useForm } from 'react-hook-form';
 import { RegisterFormSchema, RegisterFormValues } from '../../lib/validations/user';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { signUpAction } from '../../app/actions/auth';
+import { useRouter } from 'next/navigation';
 
 const RegisterForm = () => {
-    const {register, handleSubmit, formState: { errors, isSubmitting }} = useForm<RegisterFormValues>({
-        resolver: zodResolver(RegisterFormSchema), // Подключаем твою схему с refine
+    const {register, handleSubmit, setError, formState: { errors, isSubmitting }} = useForm<RegisterFormValues>({
+        resolver: zodResolver(RegisterFormSchema),
             defaultValues: {
                 email: '',
                 password: '',
                 confirmPassword: '',
         },
     });
+    const router = useRouter();
 
     const onInvalid = (errors: any) => {
         console.error("Errors:", errors);
     };
 
     const onSubmit = async (data: any) => {
-        // const finalData = {
-        //     ...data,
-        //     slug: slugify(data.title, { lower: true, strict: true, locale: 'en' })
-        // };
-        // const result = await createProductAction(finalData);
+        const result = await signUpAction(data);
+        if (!result.success) {
+            if (result.error === "email_exists") {
+                setError("email", { 
+                    type: "manual", 
+                    message: "Entered email already exist." 
+                });
 
-        // if (!result.success) {
-        //     if (result.error === "slug_exists") {
-        //         setError("slug", { 
-        //             type: "manual", 
-        //             message: "Product with this slug already exist, change your title." 
-        //         });
-
-        //     } else {
-        //         alert("Error: " + result.message);
-        //     }
-        //     return;
-        // }
-        // alert("Product successfully created!");
-        // reset();
+            } else {
+                console.log("Error: " + result.message);
+                setError("email", { 
+                    type: "server", 
+                    message: result?.message || "Invalid email or password" 
+                });
+                setError("password", { 
+                    type: "server", 
+                    message: "Please check your credentials" 
+                });
+                setError("confirmPassword", { 
+                    type: "server", 
+                    message: "Please check your credentials" 
+                });
+            }
+            return;
+        };
+        router.push('/login?registered=success');
+        router.refresh();        
     };
 
     return (
@@ -50,11 +60,11 @@ const RegisterForm = () => {
                     <input {...register('email')} 
                         className={`w-full border p-2 mt-1 ${errors.email && 'error-input'}`}
                         placeholder="Email" />
-                    {/* {errors.slug && (
+                    {errors.email && (
                         <p className="text-red-500/75 text-xs mt-1">
-                        {errors.email.message}
+                            {errors.email.message}
                         </p>
-                    )} */}
+                    )}
                 </div>
                 <div id='password'>
                     <label className='font-semibold text-lg text-gray-20'>Password</label>

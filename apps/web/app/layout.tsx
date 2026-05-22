@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
+import { cookies } from 'next/headers';
 import Header from "../components/Navigation/Header";
 import Footer from "../components/Navigation/Footer";
 
@@ -18,15 +19,17 @@ export const metadata: Metadata = {
   description: "...",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const cookieStore = await cookies();
+  const isLoggedIn = !!cookieStore.get('session_token')?.value;
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} flex flex-col min-h-screen`}>
-        <Header />
+        <Header isLoggedIn={isLoggedIn}/>
         <main className="grow">
           {children}
         </main>

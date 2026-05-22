@@ -1,10 +1,17 @@
 import { Request, Response, NextFunction } from 'express';
 import { Product } from "../models/Product";
 
+interface AuthenticatedRequest extends Request {
+  user?: {
+    userId: string;
+    email?: string;
+  };
+}
+
 export const getProducts = async (req: Request, res: Response, next: NextFunction) => {
 
   try {
-    const { category, brand, order, screen_type } = req.query;
+    const { category, brand, order } = req.query;
     const filterObject: any = {};
 
     let sortObject: any = { createdAt: -1 };
@@ -68,5 +75,21 @@ export const getProduct = async (req: Request, res: Response, next: NextFunction
     if (!err.statusCode) err.statusCode = 500;
     return next(err);
   }
+};
+
+export const getMyProducts = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const authReq = req as AuthenticatedRequest;
+        const userId = authReq.user?.userId; 
+        
+        const products = await Product.find({ userId: userId });
+
+        return res.status(200).json({
+            message: 'Success',
+            products
+        });
+    } catch (err) {
+        return next(err);
+    }
 };
 
