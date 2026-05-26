@@ -1,5 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { Product } from "../models/Product";
+import { User } from '../models/User';
+import { deleteImagesFromCloud } from '../utils/actions';
 
 interface AuthenticatedRequest extends Request {
   user?: {
@@ -93,6 +95,60 @@ export const getMyProducts = async (req: Request, res: Response, next: NextFunct
         return res.status(200).json({
             message: 'Success',
             products
+        });
+    } catch (err) {
+        return next(err);
+    }
+};
+
+export const deleteProduct = async (req: Request, res: Response, next: NextFunction) => {
+  const {id} = req.body;
+  try {
+        const authReq = req as AuthenticatedRequest;
+        const userId = authReq.user?.userId; 
+        
+        if (!userId) {
+          return res.status(401).json({
+            message: 'Unauthorized: User authentication failed or token is missing.'
+          });
+        };
+        
+        const product = await Product.findById(id);
+
+        if (!product) {
+          return res.status(404).json({ message: 'Product not found.' });
+        };
+
+        if(product.userId.toString() !== userId.toString()){
+          return res.status(403).json({ 
+            message: 'Forbidden: You are not allowed to delete this product.' 
+          });
+        };
+
+        const allImages = product.variants?.flatMap((variant: any) => variant.images) || [];
+
+        if (allImages.length > 0) {
+          try {
+            await deleteImagesFromCloud(allImages);
+          } catch (cloudErr) {
+            console.error("Cloudinary delete failed:", cloudErr);
+          }
+        }
+
+        await User.updateMany(
+            {},
+            {
+                $pull: {
+                    favourite: id,
+                    "cart.items": { productId: id }
+                }
+            }
+        );
+
+        await Product.findByIdAndDelete(id);
+
+        return res.status(200).json({
+            message: 'Product successfully deleted.',
         });
     } catch (err) {
         return next(err);

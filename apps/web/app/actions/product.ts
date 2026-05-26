@@ -200,3 +200,51 @@ export async function getMyProductsAction() {
         return { success: false, error: "network_error", message: "Error during server connection." };
     }
 };
+
+export async function deleteProductAction(id: string) {
+    const BACKEND_URL = process.env.EXTERNAL_BACKEND_URL;
+    try {
+        const cookieStore = await cookies();
+        const token = cookieStore.get('session_token')?.value;
+
+        if (!token) {
+            return { success: false, error: "unauthorized", message: "Please sign in to proceed!" };
+        };
+
+        const response = await fetch(`${BACKEND_URL}/products/delete-product`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({id})
+        });
+
+        const result = await response.json();
+
+        if (response.status === 403) {
+            return { 
+                success: false, 
+                error: "wrong_user", 
+                message: "Forbidden: You are not allowed to delete this product." 
+            };
+        };
+
+        if (response.status === 404) {
+            return { 
+                success: false, 
+                error: "product_lack", 
+                message: "Product not found." 
+            };
+        };
+
+        if (!response.ok) {
+            return { success: false, error: "server_error", message: result.message || "Products fetching failed." };
+        };
+
+        return { success: true};
+    } catch(err) {
+        console.error("Error in deleteProduct:", err);
+        return { success: false, error: "network_error", message: "Error during server connection." };
+    }
+}
