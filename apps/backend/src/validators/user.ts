@@ -23,23 +23,15 @@ export const UserSchema = z.object({
   password: z.string().min(6),
   name: z.string().min(1).optional(),
   surname: z.string().min(1).optional(),
-  
   cart: z.object({
     items: z.array(CartItemSchema).default([]),
   }).default({ items: [] }),
-  
   orders: z.array(z.string()).default([]),
-  
-  favourite: z.array(z.object({
-    productId: z.string()
-  })).default([]),
-  
+  favourite: z.array(z.string()).default([]),
   myProducts: z.array(z.object({
     productId: z.string()
   })).default([]),
-  
   address: z.array(SavedAddressSchema).default([]),
-  
   createdAt: z.date().optional(),
   updatedAt: z.date().optional(),
 });

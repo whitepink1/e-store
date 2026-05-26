@@ -179,9 +179,6 @@ export async function getMyProductsAction() {
             return { success: false, error: "unauthorized", message: "Please sign in to proceed!" };
         };
 
-        const decoded = jwt.verify(token, process.env.JWT_SECRET!) as { userId: string };
-        const userId = decoded.userId;
-
         const response = await fetch(`${BACKEND_URL}/products/my-products`, {
             method: 'GET',
             headers: {

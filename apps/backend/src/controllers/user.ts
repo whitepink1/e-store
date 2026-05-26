@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { User } from '../models/User';
+import { AuthenticatedRequest } from '../middleware/auth';
 
 export const createUser = async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -63,6 +64,78 @@ export const loginUser = async (req: Request, res: Response, next: NextFunction)
     }
 };
 
-export const getUser = (req: Request, res: Response, next: NextFunction) => {
+export const getUser = async (req: Request, res: Response, next: NextFunction) => {
 
 };
+
+export const getFavourite = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const authReq = req as AuthenticatedRequest;
+        const userId = authReq.user?.userId; 
+            
+        if (!userId) {
+            return res.status(401).json({
+                message: 'Unauthorized: User authentication failed or token is missing.'
+            });
+        };
+            
+        const user = await User.findOne({ _id: userId });
+
+        if (!user) {
+            return res.status(404).json({
+                message: 'User not found.'
+            });
+        };
+
+        return res.status(200).json({
+            message: 'Success',
+            favourites: user.favourite || []
+        });
+        } catch (err) {
+            return next(err);
+        }
+};
+
+export const postFavourite = async (req: Request, res: Response, next: NextFunction) => {
+    const { productId } = req.body;
+
+    if (!productId) {
+        return res.status(400).json({ message: 'Bad Request: Product ID is required.' });
+    }
+
+    try {
+        const authReq = req as AuthenticatedRequest;
+        const userId = authReq.user?.userId; 
+            
+        if (!userId) {
+            return res.status(401).json({
+                message: 'Unauthorized: User authentication failed or token is missing.'
+            });
+        };
+            
+        const user = await User.findOne({ _id: userId });
+
+        if (!user) {
+            return res.status(404).json({
+                message: 'User not found.'
+            });
+        };
+
+        const favouriteIds = user.favourite.map((id: any) => id.toString());
+
+        if (favouriteIds.includes(productId)) {
+            user.favourite = favouriteIds.filter((id: string) => id !== productId);
+        } else {
+            user.favourite.push(productId);
+        };
+
+        await user.save();
+
+        return res.status(200).json({
+            message: 'Success',
+        });
+        } catch (err) {
+            return next(err);
+        }
+};
+

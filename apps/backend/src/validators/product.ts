@@ -102,6 +102,7 @@ const Rating = z.object({
 // Main Scheme
 export const ProductSchema = z.discriminatedUnion("category", [
   z.object({
+    _id: z.string().optional(),
     category: z.literal(CATEGORIES[0]),
     title: z.string().min(1),
     brand: z.string(),
@@ -115,6 +116,7 @@ export const ProductSchema = z.discriminatedUnion("category", [
     variants: z.array(SmartphoneVariant).min(1), // Price variations
   }),
   z.object({
+    _id: z.string().optional(),
     category: z.literal(CATEGORIES[1]),
     title: z.string().min(1),
     brand: z.string(),
@@ -128,6 +130,7 @@ export const ProductSchema = z.discriminatedUnion("category", [
     variants: z.array(SmartwatchesVariant).min(1),
   }),
   z.object({
+    _id: z.string().optional(),
     category: z.literal(CATEGORIES[2]),
     title: z.string().min(1),
     brand: z.string(),
@@ -141,6 +144,7 @@ export const ProductSchema = z.discriminatedUnion("category", [
     variants: z.array(CamerasVariant).min(1),
   }),
   z.object({
+    _id: z.string().optional(),
     category: z.literal(CATEGORIES[3]),
     title: z.string().min(1),
     brand: z.string(),
@@ -154,6 +158,7 @@ export const ProductSchema = z.discriminatedUnion("category", [
     variants: z.array(HeadphoneVariant).min(1),
   }),
   z.object({
+    _id: z.string().optional(),
     category: z.literal(CATEGORIES[4]),
     title: z.string().min(1),
     brand: z.string(),
@@ -167,6 +172,7 @@ export const ProductSchema = z.discriminatedUnion("category", [
     variants: z.array(ComputersVariant).min(1),
   }),
   z.object({
+    _id: z.string().optional(),
     category: z.literal(CATEGORIES[5]),
     title: z.string().min(1),
     brand: z.string(),

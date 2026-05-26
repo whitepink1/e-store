@@ -1,6 +1,6 @@
 'use client'
 import AddProduct from '../../components/ProfileTabs/AddProduct';
-import EditProduct from '../../components/ProfileTabs/EditProduct';
+import Cart from '../../components/ProfileTabs/Cart';
 import MyProducts from '../../components/ProfileTabs/MyProducts';
 import { useRouter, useSearchParams } from 'next/navigation';
 
@@ -20,10 +20,10 @@ const page = () => {
             return <h1>Profile</h1>;
         case 'add-product':
             return <AddProduct />;
-        case 'edit-product':
-            return <EditProduct />;
         case 'products':
             return <MyProducts />;
+        case 'edit-product':
+            return <Cart />;
         case 'favourite':
             return <p>Favourite</p>;
         default:
@@ -46,16 +46,16 @@ const page = () => {
                     Add Product
                 </button>
                 <button 
-                    onClick={() => changeTab('edit-product')}
-                    className={`w-full text-left p-2 rounded cursor-pointer ${activeTab === 'edit-product' ? 'bg-black/85 text-white' : 'hover:bg-gray-100'}`}
-                    >
-                    Edit Product
-                </button>
-                <button 
                     onClick={() => changeTab('products')}
                     className={`w-full text-left p-2 rounded cursor-pointer ${activeTab === 'products' ? 'bg-black/85 text-white' : 'hover:bg-gray-100'}`}
                     >
                     My products
+                </button>
+                <button 
+                    onClick={() => changeTab('edit-product')}
+                    className={`w-full text-left p-2 rounded cursor-pointer ${activeTab === 'edit-product' ? 'bg-black/85 text-white' : 'hover:bg-gray-100'}`}
+                    >
+                    Cart
                 </button>
                 <button 
                     onClick={() => changeTab('favourite')}

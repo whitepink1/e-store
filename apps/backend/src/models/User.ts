@@ -40,12 +40,9 @@ const UserMongooseSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'Order'
     }],
-    favourite: [{
-        productId: { 
-            type: Schema.Types.ObjectId, 
-            ref: 'Product', 
-            required: true 
-        }
+    favourite: [{ 
+        type: Schema.Types.ObjectId, 
+        ref: 'Product' 
     }],
     myProducts: [{
         productId: {

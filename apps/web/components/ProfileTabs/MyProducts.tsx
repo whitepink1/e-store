@@ -6,7 +6,6 @@ import { Product } from '../../lib/validations/product';
 const MyProducts = () => {
     const [products, setProducts] = useState<Product[]>([]);
     const [isLoading, setIsLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
     
     useEffect(() => {
         const fetchProducts = async () => {
@@ -17,11 +16,10 @@ const MyProducts = () => {
                 if (result.success && result.data) {
                     setProducts(result.data);
                 } else {
-                    setError(result.message || "Didn't found any product.");
+                    throw new Error(result.message || "Didn't found any product.");
                 }
-                console.log(result)
             } catch (err) {
-                setError('Server connection error.');
+                console.log(err)
             } finally {
                 setIsLoading(false);
             }
@@ -30,11 +28,20 @@ const MyProducts = () => {
         fetchProducts();
     }, []);
 
-    if (isLoading) return <div className="text-gray-500">Products loading...</div>;
-    if (error) return <div className="text-red-500">Error: {error}</div>;
-
     return (
-        <div>MyProducts</div>
+        <div className='flex flex-col items-start gap-4'>
+            {isLoading ?
+                <div className="text-gray-500">Products loading...</div>
+            :   
+                <>
+                {products.map(product => (
+                    <div key={product.slug} className='w-full bg-gray-10'>
+                        1
+                    </div>
+                ))}
+                </>
+            }
+        </div>
     )
 }
 

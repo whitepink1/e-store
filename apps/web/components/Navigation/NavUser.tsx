@@ -1,10 +1,8 @@
 'use client'
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import Link from 'next/link';
-import Cookies from 'js-cookie';
-import { useRouter } from 'next/navigation';
-import { logoutAction } from '../../app/actions/auth';
 import Image from 'next/image';
+import { getFavouriteAction } from '../../app/actions/user';
 
 interface NavUserProps {
   isLoggedIn: boolean;
@@ -12,17 +10,41 @@ interface NavUserProps {
 }
 
 const NavUser = ({ isLoggedIn, onLogout }: NavUserProps) => {
+  const [favCount, setFavCount] = useState(0);
+
+  const checkFavourites = useCallback(async () => {
+    if (!isLoggedIn) {
+      setFavCount(0);
+      return;
+    }
+    try {
+      const response = await getFavouriteAction();
+      const list = response?.favourites || [];
+      setFavCount(list.length);
+    } catch (err) {
+      console.error("Failed to load favourites count.", err);
+    }
+  }, [isLoggedIn]);
+
+  useEffect(() => {
+    checkFavourites();
+    window.addEventListener('wishlist-updated', checkFavourites);
+    return () => {
+      window.removeEventListener('wishlist-updated', checkFavourites);
+    };
+  }, [checkFavourites]);
 
   return (
     <div className='hidden items-center gap-6 lg:flex'>
       {isLoggedIn ? (
         <>
-          <Link href='/profile?tab=favourite' className='w-8 h-8 flex justify-center items-center'>
+          <Link href='/profile?tab=favourite' className='w-8 h-8 relative flex justify-center items-center'>
             <Image
               src='/icon/favourite.png'
               width={20}
               height={20}
               alt='Favourite button'/>
+            {favCount > 0 && <p className='h-5 w-5 left-3 bottom-3 absolute flex items-center justify-center text-xs font-medium bg-gray-10 rounded-full'>{favCount}</p>}
           </Link>
           <Link href='/profile?tab=cart' className='w-8 h-8 flex justify-center items-center'>
             <Image

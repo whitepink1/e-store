@@ -82,6 +82,12 @@ export const getMyProducts = async (req: Request, res: Response, next: NextFunct
         const authReq = req as AuthenticatedRequest;
         const userId = authReq.user?.userId; 
         
+        if (!userId) {
+            return res.status(401).json({
+                message: 'Unauthorized: User authentication failed or token is missing.'
+            });
+        }
+        
         const products = await Product.find({ userId: userId });
 
         return res.status(200).json({

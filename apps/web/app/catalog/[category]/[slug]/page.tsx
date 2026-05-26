@@ -1,4 +1,3 @@
-import React from 'react'
 import { getProductBySlugAction } from '../../../actions/product';
 import Image from 'next/image';
 import { Product } from '../../../../lib/validations/product';
@@ -8,6 +7,8 @@ import { catalogFilter, deliveryDetailed } from '../../../../lib/data';
 import Button from '../../../../components/shared/Button';
 import ProductSpecification from '../../../../components/Products/ProductSpecification';
 import RatingComponent from '../../../../components/Products/RatingComponent';
+import { getFavouriteAction, handleFavouriteAction } from '../../../actions/user';
+import FavouriteButton from '../../../../components/Products/FavouriteButton';
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -17,14 +18,16 @@ interface PageProps {
 const page = async ({ params, searchParams }: PageProps) => {
   const { slug } = await params;
   const currentSearchParams = await searchParams;
-  const variantIndex = Number(currentSearchParams.v);
+  const variantIndex = Number(currentSearchParams.v || 0);
   console.log('variant' + variantIndex);
   const response = await getProductBySlugAction(slug);
   if (!response?.success || !response.data) {
     notFound();
-  }
+  };
+  const { favourites = [] } = await getFavouriteAction() || {};
   
   const product: Product = response.data;
+  const isFavourite = favourites ? favourites.includes(product._id) : false;
   const configuration = {
     ram: product.variants.some(variant => 'ram' in variant),
     storage: product.variants.some(variant => 'storage' in variant),
@@ -32,6 +35,7 @@ const page = async ({ params, searchParams }: PageProps) => {
   const selectedVariant = (variantIndex >= 0 && variantIndex < product.variants.length) 
   ? product.variants[variantIndex] 
   : product.variants[0];
+
   return (
     <div>
       <section className='w-full flex justify-center gap-20 lg:gap-40 max-lg:mt-10 max-md:flex-col max-md:items-center'>
@@ -67,7 +71,7 @@ const page = async ({ params, searchParams }: PageProps) => {
           </div>
           <p className='w-100 text-sm text-gray-20 lg:w-120 max-md:w-full'>{product.shortDescription.length < 200 ? product.shortDescription : product.shortDescription.slice(0, 200) + '...'}</p>
           <div className='w-100 flex justify-between my-2 lg:w-120 max-md:w-full max-sm:flex-col max-sm:gap-3'>
-            <Button href='' variant='black' className='lg:w-56 max-md:w-[45%] max-sm:w-full'>Add to Wishlist</Button>
+            <FavouriteButton initialIsFavourite={isFavourite} id={product._id || ''}/>
             <Button href='' variant='blackFill' className={`lg:w-56 max-md:w-[45%] max-sm:w-full ${selectedVariant && selectedVariant.stock < 1 ? 'disabled bg-gray-20/75 hover:bg-gray-20/70' : ''}`}>Add to Cart</Button>
           </div>
           <div className='w-full grid grid-cols-2 flex-wrap gap-7 max-md:flex max-md:justify-between lg:flex'>

@@ -1,7 +1,6 @@
 'use client'
 import Image from 'next/image';
 import Link from 'next/link';
-import React from 'react';
 import HamburgerMenu from './HamburgerMenu';
 import NavSearch from './NavSearch';
 import { headerNav } from '../../lib/data';

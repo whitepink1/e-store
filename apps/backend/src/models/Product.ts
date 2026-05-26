@@ -22,6 +22,7 @@ const SpecificationSchema = new Schema({
 
 
 const ProductMongooseSchema = new Schema({
+  _id: {type: String},
   category: { 
     type: String, 
     required: true, 

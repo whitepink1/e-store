@@ -7,6 +7,7 @@ import { getProductsAction } from '../../actions/product';
 import CatalogHeader from '../../../components/Products/CatalogHeader';
 import ProductCatalogCard from '../../../components/Products/ProductCatalogCard';
 import ProductCatalogCardSkeleton from '../../../components/Products/ProductCatalogCardSkeleton';
+import { getFavouriteAction } from '../../actions/user';
 
 interface CatalogPageProps {
   params: Promise<{ category: string }>;
@@ -17,15 +18,18 @@ type ProductDataFromCard = React.ComponentProps<typeof ProductCatalogCard>['prod
 
 const AsyncProductsGrid = async ({ category, filters }: { category: string, filters: any }) => {
   const response = await getProductsAction({ category, filters });
+  const { favourites = [] } = await getFavouriteAction() || {};
 
   return (
     <>
       <CatalogHeader total={response.data?.totalItems || 0} order={filters.order}/>
       <div className='w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-y-6 mt-6'>
         {response.data?.products && response.data.products.length > 0 ? 
-          response.data.products.map((product: ProductDataFromCard) => (
-            <ProductCatalogCard key={product.slug} product={product}/>
-          ))
+          response.data.products.map((product: ProductDataFromCard) => {
+            const isFavourite = favourites ? favourites.includes(product._id) : false;
+            return(
+              <ProductCatalogCard key={product.slug} product={product} initialIsFavourite={isFavourite}/>
+          )})
         :
           <p className="col-span-full text-xl text-center py-12 text-gray-300">
             No products found matching your filters

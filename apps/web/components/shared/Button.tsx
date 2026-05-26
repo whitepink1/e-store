@@ -2,7 +2,7 @@
 import { motion } from "motion/react";
 import Link from 'next/link';
 
-export type ButtonVariant = "white" | "black" | "whiteFill" | "blackFill";
+export type ButtonVariant = "white" | "black" | "whiteFill" | "blackFill" | "red";
 
 interface ButtonProps {
   children: React.ReactNode;
@@ -25,6 +25,7 @@ const Button = ({
   const variants = {
     white: "bg-transparent text-white border-1",
     black: "bg-transparent text-black border-1",
+    red: "bg-red-50 text-red-700 border-1 border-red-200 hover:bg-red-100",
     whiteFill: "bg-transparent border-2 border-white text-white hover:bg-white hover:text-black",
     blackFill: "bg-black/90 text-white hover:text-white/90 hover:bg-black/95",
   };
