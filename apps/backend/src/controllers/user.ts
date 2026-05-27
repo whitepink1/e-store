@@ -3,6 +3,7 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { User } from '../models/User';
 import { AuthenticatedRequest } from '../middleware/auth';
+import { SavedAddressSchema, UpdateNameSchema } from '../validators/user';
 
 export const createUser = async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -65,7 +66,27 @@ export const loginUser = async (req: Request, res: Response, next: NextFunction)
 };
 
 export const getUser = async (req: Request, res: Response, next: NextFunction) => {
-
+    try {
+        const authReq = req as AuthenticatedRequest;
+        const userId = authReq.user?.userId; 
+            
+        if (!userId) {
+            return res.status(401).json({
+                message: 'Unauthorized: User authentication failed or token is missing.'
+            });
+        };
+            
+        const user = await User.findById(userId);
+        if (!user) {
+          return res.status(404).json({ message: 'User not found.' });
+        };
+        res.status(200).json({
+            message: 'Fetched user successfully.',
+            user: user,
+        });
+        } catch(err) {
+            return next(err);
+        }
 };
 
 export const getFavourite = async (req: Request, res: Response, next: NextFunction) => {
@@ -93,6 +114,38 @@ export const getFavourite = async (req: Request, res: Response, next: NextFuncti
         });
         } catch (err) {
             return next(err);
+        }
+};
+
+export const updateName = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const authReq = req as AuthenticatedRequest;
+        const userId = authReq.user?.userId; 
+            
+        if (!userId) {
+            return res.status(401).json({
+                message: 'Unauthorized: User authentication failed or token is missing.'
+            });
+        };
+
+        const partialCheck = UpdateNameSchema.partial();
+        const validatedData = partialCheck.parse(req.body);
+
+        const updatedUser = await User.findByIdAndUpdate(
+            userId,
+            { $set: validatedData },
+            { new: true }
+        );
+
+        if (!updatedUser) {
+            return res.status(404).json({
+                message: 'User not found.'
+            });
+        };
+
+        return res.status(200).json({ success: true});
+        } catch (err) {
+            return res.status(400).json({ message: "Validation failed" });
         }
 };
 
@@ -133,6 +186,85 @@ export const postFavourite = async (req: Request, res: Response, next: NextFunct
 
         return res.status(200).json({
             message: 'Success',
+        });
+        } catch (err) {
+            return next(err);
+        }
+};
+
+export const createAddress = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const authReq = req as AuthenticatedRequest;
+        const userId = authReq.user?.userId; 
+            
+        if (!userId) {
+            return res.status(401).json({
+                message: 'Unauthorized: User authentication failed or token is missing.'
+            });
+        };
+
+        const validatedAddress = SavedAddressSchema.parse(req.body);
+
+        const updatedUser = await User.findByIdAndUpdate(
+            userId,
+            { 
+                $push: { address: validatedAddress } 
+            },
+            { 
+                new: true,
+                runValidators: true
+            }
+        );
+
+        if (!updatedUser) {
+            return res.status(404).json({
+                message: 'User not found.'
+            });
+        };
+
+        return res.status(200).json({
+            success: true,
+            message: 'Address successfully added.',
+        });
+        } catch (err) {
+            return next(err);
+        }
+};
+export const deleteAddress = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const authReq = req as AuthenticatedRequest;
+        const userId = authReq.user?.userId; 
+            
+        if (!userId) {
+            return res.status(401).json({
+                message: 'Unauthorized: User authentication failed or token is missing.'
+            });
+        };
+
+        const {id} = req.body;
+        if (!id) {
+            return res.status(400).json({
+                message: 'Bad Request: Address ID is required.'
+            });
+        };
+
+        const updatedUser = await User.findByIdAndUpdate(
+            userId,
+            {
+                $pull: { address: { _id: id } }
+            },
+            { new: true }
+        );
+
+        if (!updatedUser) {
+            return res.status(404).json({
+                message: 'User not found.'
+            });
+        }
+
+        return res.status(200).json({
+            success: true,
+            message: 'Address successfully deleted.',
         });
         } catch (err) {
             return next(err);

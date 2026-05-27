@@ -3,6 +3,7 @@ import AddProduct from '../../components/ProfileTabs/AddProduct';
 import Cart from '../../components/ProfileTabs/Cart';
 import MyProducts from '../../components/ProfileTabs/MyProducts';
 import { useRouter, useSearchParams } from 'next/navigation';
+import Profile from '../../components/ProfileTabs/Profile';
 
 const page = () => {
     const searchParams = useSearchParams();
@@ -17,7 +18,7 @@ const page = () => {
     const renderTab = () => {
         switch (activeTab) {
         case 'profile':
-            return <h1>Profile</h1>;
+            return <Profile />;
         case 'add-product':
             return <AddProduct />;
         case 'products':
@@ -52,8 +53,8 @@ const page = () => {
                     My products
                 </button>
                 <button 
-                    onClick={() => changeTab('edit-product')}
-                    className={`w-full text-left p-2 rounded cursor-pointer ${activeTab === 'edit-product' ? 'bg-black/85 text-white' : 'hover:bg-gray-100'}`}
+                    onClick={() => changeTab('cart')}
+                    className={`w-full text-left p-2 rounded cursor-pointer ${activeTab === 'cart' ? 'bg-black/85 text-white' : 'hover:bg-gray-100'}`}
                     >
                     Cart
                 </button>

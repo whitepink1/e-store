@@ -54,4 +54,12 @@ export const LoginFormSchema = z.object({
   password: z.string().min(1),
 });
 
+export const UpdateNameSchema = UserSchema.pick({
+  name: true,
+  surname: true,
+}).required();
+
+export type UpdateNameValues = z.infer<typeof UpdateNameSchema>;
+
 export type LoginFormValues = z.infer<typeof LoginFormSchema>;
+export type AddressFormValues = z.infer<typeof SavedAddressSchema>;
