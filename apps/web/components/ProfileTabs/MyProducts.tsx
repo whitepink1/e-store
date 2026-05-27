@@ -53,7 +53,7 @@ const MyProducts = () => {
             :   
                 <>
                 {products.map(product => (
-                    <div key={product.slug} className='grid grid-cols-4 items-center bg-gray-10/45 rounded-lg p-3 lg:w-200'>
+                    <div key={product.slug} className='grid grid-cols-4 items-center bg-white-100 rounded-lg p-3 lg:w-200'>
                         <Image
                             src={product.variants[0]?.images[0] || ''}
                             height={80}
@@ -63,14 +63,14 @@ const MyProducts = () => {
                         <p className='text-lg font-medium px-2'>{product.title}</p>
                         <p className='text-lg font-medium px-2 justify-self-center'>{product.category}</p>
                         <div className='flex items-center gap-2 justify-self-end'>
-                            <button
+                            {/* <button
                                 className='bg-white/50 p-1 rounded-md cursor-pointer hover:scale-105'>
                                 <Image
                                     src='/icon/edit.png'
                                     height={30}
                                     width={30}
                                     alt='Edit product'/>
-                            </button>
+                            </button> */}
                             <button 
                                 className='bg-white/50 p-1 rounded-md cursor-pointer hover:scale-105'
                                 onClick={() => handleDelete(product._id || '')}>

@@ -4,6 +4,7 @@ import Cart from '../../components/ProfileTabs/Cart';
 import MyProducts from '../../components/ProfileTabs/MyProducts';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Profile from '../../components/ProfileTabs/Profile';
+import Favourite from '../../components/ProfileTabs/Favourite';
 
 const page = () => {
     const searchParams = useSearchParams();
@@ -26,7 +27,7 @@ const page = () => {
         case 'edit-product':
             return <Cart />;
         case 'favourite':
-            return <p>Favourite</p>;
+            return <Favourite />;
         default:
             return <h2>Default</h2>;
         }

@@ -68,7 +68,7 @@ const Profile = () => {
                                 <p className='text-black-50 text-base leading-6'>{item.country}, {item.city}, {item.street} {item.apartment && '#' + item.apartment} / {item.postalCode}</p>
                                 <button className='cursor-pointer hover:scale-105' onClick={() => handleDeleteAddress(item._id || '')}>
                                     <Image
-                                        src='/icon/remove-x.png'
+                                        src='/icon/delete-x.png'
                                         height={24}
                                         width={24}
                                         alt='Remove address'/>

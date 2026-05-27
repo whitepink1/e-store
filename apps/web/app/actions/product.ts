@@ -247,4 +247,24 @@ export async function deleteProductAction(id: string) {
         console.error("Error in deleteProduct:", err);
         return { success: false, error: "network_error", message: "Error during server connection." };
     }
-}
+};
+
+export async function getProductsByIdsAction(ids: string[]) {
+    const BACKEND_URL = process.env.EXTERNAL_BACKEND_URL;
+    try {
+        if (ids.length === 0) return { success: true, data: [] };
+
+        const response = await fetch(`${BACKEND_URL}/products/batch`, {
+            method: 'POST',
+            headers: { 
+                'Content-Type': 'application/json' 
+            },
+            body: JSON.stringify({ ids })
+        });
+
+        const result = await response.json();
+        return result;
+    } catch (err) {
+        return { success: false, message: "Failed to fetch bundle" };
+    }
+};

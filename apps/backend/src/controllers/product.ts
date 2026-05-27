@@ -155,3 +155,23 @@ export const deleteProduct = async (req: Request, res: Response, next: NextFunct
     }
 };
 
+export const getProductsByBatch = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { ids } = req.body; 
+    if (!ids || !Array.isArray(ids)) {
+      return res.status(400).json({ message: "Invalid or missing ids array" });
+    }
+
+    const products = await Product.find({
+      _id: { $in: ids }
+    });
+
+    return res.status(200).json({
+      success: true,
+      data: products
+    });
+    } catch (err) {
+      return next(err);
+    }
+};
+
