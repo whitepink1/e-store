@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { CartItem } from "../../lib/validations/user";
-import { getCartAction } from "../../app/actions/user";
+import { getCartAction, handleCartAction } from "../../app/actions/user";
 import { getProductsByIdsAction } from "../../app/actions/product";
 import { Product } from "../../lib/validations/product";
 import Image from "next/image";
@@ -11,6 +11,42 @@ const Cart = () => {
     const [cart, setCart] = useState<CartItem[]>([]);
     const [products, setProducts] = useState<Product[]>([]);
     const [isLoading, setIsLoading] = useState(true);
+
+    const handleQuantity = (item: CartItem, type: 'add' | 'decrease') => {
+        setCart((prevCart) =>
+            prevCart.map((cartItem) => {
+                const isSameProduct = cartItem.productId.toString() === item.productId.toString();
+                const isSameVariant = cartItem.variantId === item.variantId;
+
+                if (isSameProduct && isSameVariant) {
+                    if (type === 'add') {
+                        return { ...cartItem, quantity: cartItem.quantity + 1 };
+                    }
+                    if (type === 'decrease') {
+                        return { 
+                            ...cartItem, 
+                            quantity: cartItem.quantity > 1 ? cartItem.quantity - 1 : 1 
+                        };
+                    }
+                };
+                return cartItem;
+            })
+        );
+    };
+
+    const handleCart = async (id: string, variant: number) => {
+        try {
+            const result = await handleCartAction(id, variant);
+            if (!result.success) {
+                alert(result.message || "Updating cart failed");
+            } else {
+
+                window.dispatchEvent(new Event('cart-updated'));
+            }
+        } catch(err) {
+            console.log(err);
+        }
+    };
 
     const totalAmount = cart.reduce((sum, item) => {
         const selectedProduct = products.find(
@@ -82,15 +118,15 @@ const Cart = () => {
                                     <p className='text-sm leading-6'>#{selectedProduct?.slug}</p>
                                 </div>
                                 <div className="flex items-center gap-2 col-span-2">
-                                    <button className="w-6 h-6 text-xl font-medium cursor-pointer">-</button>
+                                    <button onClick={() => handleQuantity(item, 'decrease')} className={`w-6 h-6 text-xl font-medium my-auto cursor-pointer ${item.quantity > 1 ? '' : 'disabled text-gray-20'}`}>-</button>
                                     <p className="py-2 px-4 border border-white-200 rounded-sm">{item.quantity}</p>
-                                    <button className="w-6 h-6 text-lg font-medium cursor-pointer">+</button>
+                                    <button onClick={() => handleQuantity(item, 'add')} className={`w-6 h-6 text-lg font-medium my-auto cursor-pointer ${item.quantity < 10 ? '' : 'disabled text-gray-20'}`}>+</button>
                                 </div>
                                 <p>$ {(currentVariant?.finalPrice || 0) * item.quantity}</p>
                                 <div className='flex items-center gap-2 justify-self-end'>
                                     <button 
                                         className='bg-white/50 p-1 rounded-md cursor-pointer hover:scale-105'
-                                        onClick={() => {}}>
+                                        onClick={() => handleCart(item.productId, Number(item.variantId))}>
                                         <Image
                                             src='/icon/delete-x.png'
                                             height={24}
