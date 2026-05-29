@@ -63,3 +63,4 @@ export type UpdateNameValues = z.infer<typeof UpdateNameSchema>;
 
 export type LoginFormValues = z.infer<typeof LoginFormSchema>;
 export type AddressFormValues = z.infer<typeof SavedAddressSchema>;
+export type CartItem = z.infer<typeof CartItemSchema>;

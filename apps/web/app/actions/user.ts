@@ -178,3 +178,58 @@ export async function handleDeleteAddressAction(id: string) {
         return { success: false, error: "network_error" };
     }
 };
+
+export const getCartAction = async () => {
+    const BACKEND_URL = process.env.EXTERNAL_BACKEND_URL;
+        try {
+            const cookieStore = await cookies();
+            const token = cookieStore.get('session_token')?.value;
+    
+            if (!token) {
+                return { success: false, error: "unauthorized", message: "Please sign in to proceed." };
+            }
+
+            const response = await fetch(`${BACKEND_URL}/cart`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                cache: 'no-store'
+            });
+
+        const result = await response.json();
+        if (!response.ok) return { success: false, message: result.message };
+        return { success: true, cart: result.cart };
+        } catch(err) {
+            return { success: false, error: "network_error" };
+        }
+};
+
+export const handleCartAction = async (id: string, variant: number) => {
+    const BACKEND_URL = process.env.EXTERNAL_BACKEND_URL;
+    try {
+        const cookieStore = await cookies();
+        const token = cookieStore.get('session_token')?.value;
+
+        if (!token) {
+            return { success: false, error: "unauthorized", message: "Please sign in to proceed." };
+        }
+
+        const response = await fetch(`${BACKEND_URL}/cart/toggle`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({ id, variant }),
+            cache: 'no-store'
+        });
+
+        const result = await response.json();
+        if (!response.ok) return { success: false, message: result.message };
+        return { success: true , message: result.message, cart: result.cart};
+    } catch(err) {
+        return { success: false, error: "network_error" };
+    }
+}

@@ -24,7 +24,7 @@ const page = () => {
             return <AddProduct />;
         case 'products':
             return <MyProducts />;
-        case 'edit-product':
+        case 'cart':
             return <Cart />;
         case 'favourite':
             return <Favourite />;

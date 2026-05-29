@@ -4,11 +4,11 @@ import { Product } from '../../../../lib/validations/product';
 import { notFound } from 'next/navigation';
 import ProductConfiguration from '../../../../components/Products/ProductConfiguration';
 import { catalogFilter, deliveryDetailed } from '../../../../lib/data';
-import Button from '../../../../components/shared/Button';
 import ProductSpecification from '../../../../components/Products/ProductSpecification';
 import RatingComponent from '../../../../components/Products/RatingComponent';
-import { getFavouriteAction, handleFavouriteAction } from '../../../actions/user';
+import { getCartAction, getFavouriteAction } from '../../../actions/user';
 import FavouriteButton from '../../../../components/Products/FavouriteButton';
+import CartButton from '../../../../components/Products/CartButton';
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -19,15 +19,23 @@ const page = async ({ params, searchParams }: PageProps) => {
   const { slug } = await params;
   const currentSearchParams = await searchParams;
   const variantIndex = Number(currentSearchParams.v || 0);
-  console.log('variant' + variantIndex);
   const response = await getProductBySlugAction(slug);
   if (!response?.success || !response.data) {
     notFound();
   };
   const { favourites = [] } = await getFavouriteAction() || {};
+  const { cart = [] } = await getCartAction() || {};
   
   const product: Product = response.data;
   const isFavourite = favourites ? favourites.includes(product._id) : false;
+  const isInCart = cart.some((item: any) => {
+    const cartProductId = item.productId?.toString() || '';
+    const currentProductId = product._id?.toString() || '';
+    const cartVariantId = String(item.variantId);
+    const currentVariantId = String(variantIndex);
+
+    return cartProductId === currentProductId && cartVariantId === currentVariantId;
+  });
   const configuration = {
     ram: product.variants.some(variant => 'ram' in variant),
     storage: product.variants.some(variant => 'storage' in variant),
@@ -72,7 +80,7 @@ const page = async ({ params, searchParams }: PageProps) => {
           <p className='w-100 text-sm text-gray-20 lg:w-120 max-md:w-full'>{product.shortDescription.length < 200 ? product.shortDescription : product.shortDescription.slice(0, 200) + '...'}</p>
           <div className='w-100 flex justify-between my-2 lg:w-120 max-md:w-full max-sm:flex-col max-sm:gap-3'>
             <FavouriteButton initialIsFavourite={isFavourite} id={product._id || ''}/>
-            <Button href='' variant='blackFill' className={`lg:w-56 max-md:w-[45%] max-sm:w-full ${selectedVariant && selectedVariant.stock < 1 ? 'disabled bg-gray-20/75 hover:bg-gray-20/70' : ''}`}>Add to Cart</Button>
+            <CartButton id={product._id || ''} variant={variantIndex} isInCart={isInCart} stock={selectedVariant?.stock}/>
           </div>
           <div className='w-full grid grid-cols-2 flex-wrap gap-7 max-md:flex max-md:justify-between lg:flex'>
             {deliveryDetailed.map(item => (
@@ -104,4 +112,4 @@ const page = async ({ params, searchParams }: PageProps) => {
   )
 }
 
-export default page
+export default page;

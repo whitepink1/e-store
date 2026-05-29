@@ -11,5 +11,7 @@ router.post('/delete-address', requireAuth, userController.deleteAddress);
 router.get('/profile', requireAuth, userController.getUser);
 router.get('/favourites', requireAuth, userController.getFavourite);
 router.post('/favourites/toggle', requireAuth, userController.postFavourite);
+router.post('/cart/toggle', requireAuth, userController.postCart);
+router.get('/cart', requireAuth, userController.getCart);
 
 export default router;

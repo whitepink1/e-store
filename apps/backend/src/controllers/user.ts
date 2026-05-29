@@ -271,3 +271,81 @@ export const deleteAddress = async (req: Request, res: Response, next: NextFunct
         }
 };
 
+export const getCart = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const authReq = req as AuthenticatedRequest;
+        const userId = authReq.user?.userId; 
+            
+        if (!userId) {
+            return res.status(401).json({
+                message: 'Unauthorized: User authentication failed or token is missing.'
+            });
+        };
+            
+        const user = await User.findById(userId);
+        if (!user) {
+          return res.status(404).json({ message: 'User not found.' });
+        };
+        res.status(200).json({
+            message: 'Fetched user successfully.',
+            cart: user.cart.items,
+        });
+        } catch(err) {
+            return next(err);
+        }
+};
+
+export const postCart = async (req: Request, res: Response, next: NextFunction) => {
+    const { id, variant } = req.body;
+
+    if (!id) {
+        return res.status(400).json({ message: 'Bad Request: Product ID is required.' });
+    }
+    if (variant === undefined || variant === null) {
+        return res.status(400).json({ message: 'Bad Request: Product variant is required.' });
+    }
+
+    try {
+        const authReq = req as AuthenticatedRequest;
+        const userId = authReq.user?.userId; 
+            
+        if (!userId) {
+            return res.status(401).json({
+                message: 'Unauthorized: User authentication failed or token is missing.'
+            });
+        };
+            
+        const user = await User.findOne({ _id: userId });
+
+        if (!user) {
+            return res.status(404).json({
+                message: 'User not found.'
+            });
+        };
+
+        const itemIndex = user.cart.items.findIndex(
+            (item: any) => item.productId.toString() === id && item.variantId === String(variant)
+        );
+
+        if (itemIndex > -1) {
+            user.cart.items.splice(itemIndex, 1);
+        } else {
+            user.cart.items.push({
+                productId: id,
+                variantId: String(variant),
+                quantity: 1
+            });
+        };
+
+        await user.save();
+
+        return res.status(200).json({
+            success: true,
+            message: 'Cart successfully updated.',
+            cart: user.cart.items 
+        });
+    } catch (err) {
+        return next(err);
+    }
+};
+
