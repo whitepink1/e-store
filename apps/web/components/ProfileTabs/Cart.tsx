@@ -2,14 +2,19 @@
 
 import { useEffect, useState } from "react";
 import { CartItem } from "../../lib/validations/user";
-import { getCartAction, handleCartAction } from "../../app/actions/user";
+import { getCartAction, handleCartAction, initCheckoutAction } from "../../app/actions/user";
 import { getProductsByIdsAction } from "../../app/actions/product";
 import { Product } from "../../lib/validations/product";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+import Button from "../shared/Button";
 
 const Cart = () => {
+    const router = useRouter();
     const [cart, setCart] = useState<CartItem[]>([]);
     const [products, setProducts] = useState<Product[]>([]);
+    const [promo, setPromo] = useState('');
+    const [bonus, setBonus] = useState('');
     const [isLoading, setIsLoading] = useState(true);
 
     const handleQuantity = (item: CartItem, type: 'add' | 'decrease') => {
@@ -40,7 +45,11 @@ const Cart = () => {
             if (!result.success) {
                 alert(result.message || "Updating cart failed");
             } else {
-
+                setCart((prevCart) => 
+                    prevCart.filter(
+                        (item) => !(item.productId.toString() === id && Number(item.variantId) === variant)
+                    )
+                );
                 window.dispatchEvent(new Event('cart-updated'));
             }
         } catch(err) {
@@ -95,10 +104,21 @@ const Cart = () => {
     
             fetchProducts();
     }, []);
+
+    const handleProceedToCheckout = async () => {
+        const result = await initCheckoutAction(promo, bonus, cart);
+        
+        if (result.success) {
+            router.push('/checkout');
+        } else {
+            alert(result.message || "Checkout failed");
+        }
+    };
+
     if(isLoading) return <p>Cart is loading...</p>
     return (
         <div className="flex flex-col items-center justify-center mx-auto my-10 2xl:flex-row 2xl:gap-12 2xl:my-28">
-            <div className="flex flex-col items-start">
+            <div className="flex flex-col items-start lg:min-w-150">
                 <h2 className="text-2xl font-semibold mb-10">Shopping Cart</h2>
                 {cart.length > 0 ?
                     cart.map((item, index) => {
@@ -145,11 +165,11 @@ const Cart = () => {
                 <h3 className="text-xl font-bold mb-4">Order Summary</h3>
                 <div>
                     <label className="text-sm font-medium leading-4 text-gray-70">Discount code / Promo code</label>
-                    <input type="text" className='w-full border p-3 pl-4 mt-1 rounded-lg' placeholder="Code" />
+                    <input type="text" value={promo} onChange={(e) => setPromo(e.target.value)} maxLength={10} className='w-full border p-3 pl-4 mt-1 rounded-lg' placeholder="Code" />
                 </div>
                 <div>
                     <label className="text-sm font-medium leading-4 text-gray-70">Your bonus card number</label>
-                    <input type="text" className='w-full border p-3 pl-4 mt-1 rounded-lg' placeholder="Enter Card Number" />
+                    <input type="text" value={bonus} onChange={(e) => setBonus(e.target.value)} maxLength={20} className='w-full border p-3 pl-4 mt-1 rounded-lg' placeholder="Enter Card Number" />
                 </div>
                 <div className="flex flex-col gap-4">
                     <div className="flex justify-between">
@@ -158,13 +178,13 @@ const Cart = () => {
                     </div>
                     <div className="">
                         <p className="w-full flex justify-between text-gray-70 font-base leading-8">Estimated Tax <span className="font-medium text-black">$50</span></p>
-                        <p className="w-full flex justify-between text-gray-70 font-base leading-8">Estimated Tax <span className="font-medium text-black">$29</span></p>
+                        <p className="w-full flex justify-between text-gray-70 font-base leading-8">Estimated shipping & Handling <span className="font-medium text-black">$29</span></p>
                     </div>
                     <div className="flex justify-between">
                         <h4 className="text-base font-medium leading-6">Total</h4>
-                        <p className="font-medium text-black">$ {totalAmount + 79}</p>
+                        <p className="font-medium text-black">$ {totalAmount ? totalAmount + 79 : 0}</p>
                     </div>
-                    <button></button>
+                    <Button onClick={handleProceedToCheckout} variant="blackFill" className="mt-8">Checkout</Button>
                 </div>
             </div>
         </div>

@@ -13,5 +13,6 @@ router.get('/favourites', requireAuth, userController.getFavourite);
 router.post('/favourites/toggle', requireAuth, userController.postFavourite);
 router.post('/cart/toggle', requireAuth, userController.postCart);
 router.get('/cart', requireAuth, userController.getCart);
+router.post('/checkout-init', requireAuth, userController.postCheckoutInit);
 
 export default router;

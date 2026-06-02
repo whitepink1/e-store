@@ -19,7 +19,7 @@ export const OrderAddressSchema = z.object({
 
 export const OrderSchema = z.object({
   _id: z.string().optional(),
-  userId: z.string().min(1, 'User ID is required'),
+  userId: z.string().optional(),
   products: z.array(OrderProductItemSchema).min(1, 'Order must contain at least one product'),
   address: OrderAddressSchema,
   shipment: z.string().min(1, 'Shipment method is required'),

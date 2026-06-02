@@ -349,3 +349,64 @@ export const postCart = async (req: Request, res: Response, next: NextFunction) 
     }
 };
 
+export const postCheckoutInit = async (req: Request, res: Response, next: NextFunction) => {
+    const {promo, bonus, cart} = req.body;
+    const jwtSecret = process.env.JWT_CHECKOUT_SECRET;
+
+    if (!jwtSecret) {
+        throw new Error('JWT_SECRET is not defined in environment variables');
+    }
+
+    try {
+        const authReq = req as AuthenticatedRequest;
+        const userId = authReq.user?.userId;
+
+        if (!userId) return res.status(401).json({message: 'Unauthorized.'});
+
+        const user = await User.findById(userId);
+        if(!user || user.cart.items.length === 0) {
+            return res.status(400).json({message: 'Cart is empty'});
+        };
+
+        if (!cart || !Array.isArray(cart) || cart.length === 0) {
+            return res.status(400).json({message: 'Bad request: Cart state is required.'});
+        };
+
+        const isCartValid = cart.every((clientItem: any) => {
+            return user.cart.items.some((dbItem: any) => 
+                dbItem.productId.toString() === clientItem.productId.toString() && 
+                dbItem.variantId === String(clientItem.variantId)        
+            )
+        });
+
+        if (!isCartValid) {
+            return res.status(400).json({
+                message: 'Security alert: Cart items mismatch with server records.'
+            });
+        };
+
+        const verifiedItems = cart.map((item: any) => ({
+            productId: item.productId.toString(),
+            variantId: String(item.variantId),
+            quantity: Math.max(1, Number(item.quantity || 1))
+        }));
+
+        const checkoutPayload = {
+            userId: user._id.toString(),
+            items: verifiedItems,
+            promo: promo || '',
+            bonus: bonus || '',
+        };
+
+        const checkoutToken = jwt.sign(checkoutPayload, jwtSecret, { expiresIn: '15m' });
+
+        return res.status(200).json({
+            success: true,
+            message: 'Checkout initialized successfully',
+            checkoutToken: checkoutToken
+        });
+    } catch(err) {
+        return next(err);
+    }
+};
+

@@ -1,6 +1,7 @@
 'use server'
 import { cookies } from "next/headers";
-import { AddressFormValues, UpdateNameValues } from "../../lib/validations/user";
+import { AddressFormValues, CartItem, UpdateNameValues } from "../../lib/validations/user";
+import { success } from "zod";
 
 export const getFavouriteAction = async () => {
     const BACKEND_URL = process.env.EXTERNAL_BACKEND_URL;
@@ -231,5 +232,46 @@ export const handleCartAction = async (id: string, variant: number) => {
         return { success: true , message: result.message, cart: result.cart};
     } catch(err) {
         return { success: false, error: "network_error" };
+    }
+}
+
+export const initCheckoutAction = async (promo: string, bonus: string, cart: CartItem[]) => {
+    const BACKEND_URL = process.env.EXTERNAL_BACKEND_URL;
+    try {
+        const cookieStore = await cookies();
+        const token = cookieStore.get('session_token')?.value;
+
+        if (!token) {
+            return { success: false, error: "unauthorized", message: "Please sign in to proceed." };
+        }
+
+        const response = await fetch(`${BACKEND_URL}/checkout-init`,{
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({promo, bonus, cart})
+        });
+
+        const result = await response.json();
+        if (!response.ok) return {
+            success: false,
+            message: result.message,
+        };
+
+        if (result.checkoutToken) {
+            cookieStore.set('checkout_token', result.checkoutToken, {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === 'production',
+                sameSite: 'strict',
+                maxAge: 15 * 60,
+                path: '/'
+            });
+        }
+
+        return {success: true, message: 'Checkout init successfull'}
+    } catch(err) {
+        return {success: false, error: 'network_error'}
     }
 }
