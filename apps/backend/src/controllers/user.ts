@@ -1,9 +1,11 @@
 import { Request, Response, NextFunction } from 'express';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
+import Stripe from 'stripe';
 import { User } from '../models/User';
 import { AuthenticatedRequest } from '../middleware/auth';
 import { SavedAddressSchema, UpdateNameSchema } from '../validators/user';
+import { Order } from '../models/Order';
 
 export const createUser = async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -393,6 +395,7 @@ export const postCheckoutInit = async (req: Request, res: Response, next: NextFu
 
         const checkoutPayload = {
             userId: user._id.toString(),
+            address: user.address,
             items: verifiedItems,
             promo: promo || '',
             bonus: bonus || '',
@@ -407,6 +410,141 @@ export const postCheckoutInit = async (req: Request, res: Response, next: NextFu
         });
     } catch(err) {
         return next(err);
+    }
+};
+
+export const postCreateSession = async (req: Request, res: Response, next: NextFunction) => {
+    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+        apiVersion: '2026-05-27.dahlia',
+    });
+
+    try {
+        const {products, address, shipment} = req.body;
+
+        const authReq = req as AuthenticatedRequest;
+        const userId = authReq.user?.userId;
+
+        if (!userId) return res.status(401).json({message: 'Unauthorized.'});
+
+        const line_items = products.map((item: any) => ({
+            price_data: {
+                currency: 'usd',
+                product_data: {
+                    name: `Product ID: ${item.productId}`,
+                    description: `Variant: ${item.variantId}`
+                },
+                unit_amount: Math.round(item.price * 100),
+            },
+            quantity: item.quantity,
+        }));
+        let subtotal = products.reduce((sum: number, item: any) => {
+            return sum + Number(item.quantity) * Number(item.price);
+        }, 50);
+        if (shipment === '$8.50') {
+            line_items.push({
+                price_data: {
+                    currency: 'usd',
+                    product_data: {name: 'Express Shipping'},
+                    unit_amount: 850,
+                },
+                quantity: 1,
+            });
+            subtotal += 8.50;
+        };
+        line_items.push({
+            price_data: {
+                currency: 'usd',
+                product_data: { name: 'Estimated Tax' },
+                unit_amount: 5000,
+            },
+            quantity: 1,
+        });
+
+        const session = await stripe.checkout.sessions.create({
+            payment_method_types: ['card'],
+            line_items: line_items,
+            mode: 'payment',
+            success_url: `${process.env.CLIENT_URL}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
+            cancel_url: `${process.env.CLIENT_URL}/checkout?step=Payment`,
+            metadata: {
+                userId: userId || 'guest',
+                shippingAddress: JSON.stringify(address),
+            },
+        });
+
+        const order = new Order({
+            userId: userId,
+            products: products,
+            address: address,
+            shipment: shipment,
+            totalPrice: subtotal,
+            stripeSessionId: session.id,
+            status: 'Pending'
+        });
+        await order.save();
+
+        res.status(200).json({ url: session.url });
+    } catch (err) {
+        console.error('Stripe session error:', err);
+        res.status(500).json({ message: err });
+    }
+};
+
+export const postVerifyPayment = async (req: Request, res: Response, next: NextFunction) => {
+    const { sessionId } = req.body;
+
+    try {
+        const authReq = req as AuthenticatedRequest;
+        const userId = authReq.user?.userId; 
+            
+        if (!userId) {
+            return res.status(401).json({
+                message: 'Unauthorized: User authentication failed or token is missing.'
+            });
+        };
+
+        const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+            apiVersion: '2026-05-27.dahlia',
+        });
+        const session = await stripe.checkout.sessions.retrieve(sessionId);
+
+        if (session.payment_status === 'paid') {
+            const updatedOrder = await Order.findOneAndUpdate(
+                { stripeSessionId: sessionId },
+                { status: 'Paid' },
+                { new: true }
+            );
+
+            if (!updatedOrder) {
+                return res.status(404).json({ success: false, message: 'Order not found.' });
+            }
+            
+            await User.findByIdAndUpdate(
+                userId, 
+                { $set: { 'cart.items': [] } }
+            );
+
+            return res.status(200).json({ success: true });
+        } else {
+            return res.status(400).json({ success: false, message: 'Payment not completed.' });
+        }
+    } catch(err) {
+        return res.status(400).json({ success: false, message: 'Payment not completed.' });
+    }
+};
+
+export const getUserOrders = async (req: Request, res: Response) => {
+    try {
+        const authReq = req as AuthenticatedRequest;
+        const userId = authReq.user?.userId;
+
+        const orders = await Order.find({ userId })
+                                  .sort({ createdAt: -1 })
+                                  .lean();
+
+        return res.status(200).json({ success: true, orders });
+    } catch (err) {
+        return res.status(500).json({ message: "Failed to fetch orders" });
     }
 };
 

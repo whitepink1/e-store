@@ -1,5 +1,4 @@
-const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
+import { Schema, model, models } from "mongoose";
 
 const orderSchema = new Schema({
     userId: {
@@ -33,7 +32,7 @@ const orderSchema = new Schema({
         apartment: { type: String, required: true },
         postalCode: { type: String, required: true },
         phone: { type: String, required: true },
-        recipientName: { type: String, required: true }
+        name: { type: String, required: true }
     },
     shipment: {
         type: String,
@@ -45,9 +44,10 @@ const orderSchema = new Schema({
     },
     status: {
         type: String,
-        enum: ['Pending', 'Processing', 'Shipped', 'Delivered', 'Cancelled'],
+        enum: ['Pending', 'Paid', 'Shipped', 'Delivered', 'Cancelled'],
         default: 'Pending'
-    }
+    },
+    stripeSessionId: { type: String }
 }, { timestamps: true });
 
-module.exports = mongoose.model('Order', orderSchema);
+export const Order = models.Order || model('Order', orderSchema);

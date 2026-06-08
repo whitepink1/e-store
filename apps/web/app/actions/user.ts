@@ -2,6 +2,7 @@
 import { cookies } from "next/headers";
 import { AddressFormValues, CartItem, UpdateNameValues } from "../../lib/validations/user";
 import { success } from "zod";
+import { OrderDataProps } from "../../components/Products/CheckoutForm";
 
 export const getFavouriteAction = async () => {
     const BACKEND_URL = process.env.EXTERNAL_BACKEND_URL;
@@ -274,4 +275,79 @@ export const initCheckoutAction = async (promo: string, bonus: string, cart: Car
     } catch(err) {
         return {success: false, error: 'network_error'}
     }
-}
+};
+
+export const checkoutSessionAction = async (orderData: OrderDataProps) => {
+    const BACKEND_URL = process.env.EXTERNAL_BACKEND_URL;
+    try {
+        const cookieStore = await cookies();
+        const token = cookieStore.get('session_token')?.value;
+
+        if (!token) {
+            return { success: false, error: "unauthorized", message: "Please sign in to proceed." };
+        };
+
+        const response = await fetch(`${BACKEND_URL}/checkout/create-session`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({
+                products: orderData.products,
+                address: orderData.address,
+                shipment: orderData.shipment
+            })
+        });
+
+        const result = await response.json();
+        if (!response.ok) return {
+            success: false,
+            message: result.message,
+        };
+
+        return { success: true, url: result.url };
+
+    } catch(err) {
+        return {success: false, error: 'network_error'};
+    }
+};
+
+export const verifyPaymentMethodAction = async (sessionId: string) => {
+    const BACKEND_URL = process.env.EXTERNAL_BACKEND_URL;
+
+    if (!sessionId) {
+        return { success: false, message: 'Session ID is required.' };
+    }
+    try {
+        const cookieStore = await cookies();
+        const token = cookieStore.get('session_token')?.value;
+
+        if (!token) {
+            return { success: false, error: "unauthorized", message: "Please sign in to proceed." };
+        }
+
+        const response = await fetch(`${BACKEND_URL}/checkout/verify-session`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+            },
+            body: JSON.stringify({ sessionId })
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+            return {
+                success: false,
+                message: result.message || 'Verification failed on backend',
+            };
+        };
+
+        return { success: true, message: 'Payment successfully verified' };
+    } catch(err) {
+        console.error('Server Action Verification Error:', err);
+        return { success: false, error: 'network_error', message: 'Failed to connect to backend server' };
+    }
+};

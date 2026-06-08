@@ -14,5 +14,7 @@ router.post('/favourites/toggle', requireAuth, userController.postFavourite);
 router.post('/cart/toggle', requireAuth, userController.postCart);
 router.get('/cart', requireAuth, userController.getCart);
 router.post('/checkout-init', requireAuth, userController.postCheckoutInit);
+router.post('/checkout/create-session', requireAuth, userController.postCreateSession);
+router.post('/checkout/verify-session', requireAuth, userController.postVerifyPayment);
 
 export default router;

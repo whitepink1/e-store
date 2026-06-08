@@ -5,6 +5,7 @@ import MyProducts from '../../components/ProfileTabs/MyProducts';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Profile from '../../components/ProfileTabs/Profile';
 import Favourite from '../../components/ProfileTabs/Favourite';
+import { profileTabs } from '../../lib/data';
 
 const page = () => {
     const searchParams = useSearchParams();
@@ -28,43 +29,24 @@ const page = () => {
             return <Cart />;
         case 'favourite':
             return <Favourite />;
+        case 'order':
+            return <p>Orders</p>;
         default:
-            return <h2>Default</h2>;
+            return <h2>Wrong Tab</h2>;
         }
     };
     return (
         <div className="flex flex-col min-h-screen lg:flex-row">
             <aside className="border-r border-gray-500/90 p-4 space-y-2 max-lg:grid max-lg:grid-cols-5 max-lg:gap-3 lg:w-64">
-                <button 
-                    onClick={() => changeTab('profile')}
-                    className={`w-full text-left p-2 rounded cursor-pointer ${activeTab === 'profile' ? 'bg-black/85 text-white' : 'hover:bg-gray-100'}`}
-                    >
-                    Profile
-                </button>
-                <button 
-                    onClick={() => changeTab('add-product')}
-                    className={`w-full text-left p-2 rounded cursor-pointer ${activeTab === 'add-product' ? 'bg-black/85 text-white' : 'hover:bg-gray-100'}`}
-                    >
-                    Add Product
-                </button>
-                <button 
-                    onClick={() => changeTab('products')}
-                    className={`w-full text-left p-2 rounded cursor-pointer ${activeTab === 'products' ? 'bg-black/85 text-white' : 'hover:bg-gray-100'}`}
-                    >
-                    My products
-                </button>
-                <button 
-                    onClick={() => changeTab('cart')}
-                    className={`w-full text-left p-2 rounded cursor-pointer ${activeTab === 'cart' ? 'bg-black/85 text-white' : 'hover:bg-gray-100'}`}
-                    >
-                    Cart
-                </button>
-                <button 
-                    onClick={() => changeTab('favourite')}
-                    className={`w-full text-left p-2 rounded cursor-pointer ${activeTab === 'favourite' ? 'bg-black/85 text-white' : 'hover:bg-gray-100'}`}
-                    >
-                    Favourites
-                </button>
+                {profileTabs.map(item => (
+                    <button 
+                        key={item.tabTag}
+                        onClick={() => changeTab(item.tabTag)}
+                        className={`w-full text-center p-2 rounded cursor-pointer lg:text-left ${activeTab === item.tabTag ? 'bg-black/85 text-white' : 'hover:bg-gray-100'}`}
+                        >
+                        {item.name}
+                    </button>
+                ))}
             </aside>
             <main className="flex-1 p-8">
                 {renderTab()}

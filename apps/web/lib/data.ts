@@ -42,6 +42,15 @@ export const footerSocial = [
     {name: 'Instagram', src: '/icon/instagram.png', url: '/'},
 ];
 
+export const profileTabs = [
+  {name: 'Profile', tabTag: 'profile'},
+  {name: 'Add Product', tabTag: 'add-product'},
+  {name: 'My Products', tabTag: 'products'},
+  {name: 'Favourites', tabTag: 'favourite'},
+  {name: 'Cart', tabTag: 'cart'},
+  {name: 'Orders', tabTag: 'order'},
+]
+
 export const animations = {
   fadeUp: {
     initial: { opacity: 0, y: 20 },
@@ -142,4 +151,16 @@ export const deliveryDetailed = [
   {name: 'Free Delivery', img: '/icon/delivery-truck.png', text: '1-2 day'},
   {name: 'In Stock', img: '/icon/shop-com.png', text: 'Today'},
   {name: 'Guaranteed', img: '/icon/verify.png', text: '1 year'},
-]
+];
+
+export const checkoutSteps = [
+  {number: 'Step 1', dataName: 'Address', img: '/icon/location.png'},
+  {number: 'Step 2', dataName: 'Shipping', img: '/icon/shipping.png'},
+  {number: 'Step 3', dataName: 'Payment', img: '/icon/payment.png'},
+];
+
+export const shipmentMethod = [
+  {name: 'Free', text: 'Regulary shipment', price: 0},
+  {name: '$8.50', text: 'Get your delivery as soon as possible', price: 8.50},
+  {name: 'Schedule', text: 'Pick a date when you want to get your delivery', price: 0},
+];

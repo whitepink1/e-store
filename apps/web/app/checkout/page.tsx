@@ -1,13 +1,14 @@
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import jwt from 'jsonwebtoken';
-import { CartItem } from '../../lib/validations/user';
+import { AddressFormValues, CartItem } from '../../lib/validations/user';
 import { Product } from '../../lib/validations/product';
 import { getProductsByIdsAction } from '../actions/product';
 import CheckoutForm from '../../components/Products/CheckoutForm';
 
 interface CheckoutPayload {
     userId: string;
+    address: AddressFormValues[];
     items: CartItem[];
     promo: string;
     bonus: string;
@@ -21,7 +22,7 @@ const page = async () => {
         redirect('/profile?tab=cart');
     };
     
-    let checkoutData : CheckoutPayload = { userId: '', items: [], promo: '', bonus: '' };
+    let checkoutData : CheckoutPayload = { userId: '', address: [], items: [], promo: '', bonus: '' };
     let products: Product[] = [];
     try {
         const jwtSecret = process.env.JWT_CHECKOUT_SECRET;
