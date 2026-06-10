@@ -351,3 +351,30 @@ export const verifyPaymentMethodAction = async (sessionId: string) => {
         return { success: false, error: 'network_error', message: 'Failed to connect to backend server' };
     }
 };
+
+export const getOrdersAction = async () => {
+    const BACKEND_URL = process.env.EXTERNAL_BACKEND_URL;
+    try {
+        const cookieStore = await cookies();
+        const token = cookieStore.get('session_token')?.value;
+    
+        if (!token) {
+            return { success: false, error: "unauthorized", message: "Please sign in to proceed." };
+        }
+
+        const response = await fetch(`${BACKEND_URL}/orders`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            cache: 'no-store'
+        });
+
+        const result = await response.json();
+        if (!response.ok) return { success: false, message: result.message };
+        return { success: true, orders: result.orders };
+    } catch(err) {
+        return { success: false, error: "network_error" };
+    }
+};

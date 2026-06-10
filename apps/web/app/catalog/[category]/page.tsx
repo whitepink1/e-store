@@ -8,6 +8,7 @@ import CatalogHeader from '../../../components/Products/CatalogHeader';
 import ProductCatalogCard from '../../../components/Products/ProductCatalogCard';
 import ProductCatalogCardSkeleton from '../../../components/Products/ProductCatalogCardSkeleton';
 import { getFavouriteAction } from '../../actions/user';
+import Pagination from '../../../components/Products/Pagination';
 
 interface CatalogPageProps {
   params: Promise<{ category: string }>;
@@ -19,7 +20,7 @@ type ProductDataFromCard = React.ComponentProps<typeof ProductCatalogCard>['prod
 const AsyncProductsGrid = async ({ category, filters }: { category: string, filters: any }) => {
   const response = await getProductsAction({ category, filters });
   const { favourites = [] } = await getFavouriteAction() || {};
-
+  
   return (
     <>
       <CatalogHeader total={response.data?.totalItems || 0} order={filters.order}/>
@@ -36,6 +37,13 @@ const AsyncProductsGrid = async ({ category, filters }: { category: string, filt
           </p>
         }
       </div>
+      <Pagination 
+        totalItems={response.data?.totalItems} 
+        currentPage={response.data?.currentPage}
+        hasNextPage={response.data?.hasNextPage}
+        totalPages={response.data?.totalPages}
+        perPage={response.data?.perPage}
+        />
     </>
   );
 };

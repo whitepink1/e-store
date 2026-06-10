@@ -292,9 +292,9 @@ export const getCart = async (req: Request, res: Response, next: NextFunction) =
             message: 'Fetched user successfully.',
             cart: user.cart.items,
         });
-        } catch(err) {
-            return next(err);
-        }
+    } catch(err) {
+        return next(err);
+    }
 };
 
 export const postCart = async (req: Request, res: Response, next: NextFunction) => {
@@ -548,3 +548,31 @@ export const getUserOrders = async (req: Request, res: Response) => {
     }
 };
 
+export const getOrders = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const authReq = req as AuthenticatedRequest;
+        const userId = authReq.user?.userId; 
+            
+        if (!userId) {
+            return res.status(401).json({
+                message: 'Unauthorized: User authentication failed or token is missing.'
+            });
+        };
+            
+        const user = await User.findById(userId);
+        if (!user) {
+          return res.status(404).json({ message: 'User not found.' });
+        };
+
+        const orders = await Order.find({'userId': userId});
+        if (!orders) {
+          return res.status(404).json({ message: 'Orders did not found.' });
+        };
+        res.status(200).json({
+            message: 'Fetched orders successfully.',
+            orders: orders,
+        });
+    } catch(err) {
+        return next(err);
+    }
+};

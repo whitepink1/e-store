@@ -84,10 +84,11 @@ export async function createProductAction(formData: any) {
     }
 };
 
-export async function getProductsAction({ category, filters }: GetProductsParams) {
+export async function getProductsAction({ category, filters}: GetProductsParams) {
     const BACKEND_URL = process.env.EXTERNAL_BACKEND_URL;
     try {
         const queryParams = new URLSearchParams();
+        console.log(filters)
         queryParams.append('category', category);
         Object.entries(filters).forEach(([key, value]) => {
             if (value !== undefined) {
@@ -122,7 +123,11 @@ export async function getProductsAction({ category, filters }: GetProductsParams
             success: true, 
             data: {
                 products: result.products,
-                totalItems: result.totalItems
+                totalItems: result.totalItems,
+                currentPage: result.currentPage,
+                hasNextPage: result.hasNextPage,
+                totalPages: result.totalPages,
+                perPage: result.perPage,
             }
         };
     } catch (error: any) {

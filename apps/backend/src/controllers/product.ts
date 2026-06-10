@@ -11,9 +11,10 @@ interface AuthenticatedRequest extends Request {
 }
 
 export const getProducts = async (req: Request, res: Response, next: NextFunction) => {
-
+  const perPage = Number(process.env.PUBLIC_PRODUCTS_PER_PAGE);
   try {
-    const { category, brand, order } = req.query;
+    const { category, brand, order, page } = req.query;
+    const actualPage = page ? Number(page) : 1;
     const filterObject: any = {};
 
     let sortObject: any = { createdAt: -1 };
@@ -29,16 +30,17 @@ export const getProducts = async (req: Request, res: Response, next: NextFunctio
       Product.find().find(filterObject).sort(sortObject)
         .select('title slug category variants') 
         .sort({ createdAt: -1 })                  
-        //.skip((page - 1) * perPage)
-        //.limit(perPage)
+        .skip((actualPage - 1) * perPage)
+        .limit(perPage)
     ]);
     res.status(200).json({
       message: 'Fetched products successfully.',
       products: products,
       totalItems: totalItems,
-      //currentPage: page,
-      //hasNextPage: perPage * page < totalItems,
-      //totalPages: Math.ceil(totalItems / perPage)
+      currentPage: actualPage,
+      hasNextPage: perPage * actualPage < totalItems,
+      totalPages: Math.ceil(totalItems / perPage),
+      perPage: perPage,
     });
   } catch (err: any) {
     if (!err.statusCode) err.statusCode = 500;

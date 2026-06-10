@@ -20,6 +20,7 @@ const page = () => {
 
             if (result.success) {
                 setStatus('success');
+                window.dispatchEvent(new Event('cart-updated'));
             } else {
                 setStatus('error');
             }

@@ -267,7 +267,7 @@ const CheckoutForm = ({products, orderItems}: CheckoutFormProps) => {
                             <div className='w-full'>
                                <p className='text-sm font-medium leading-4 text-gray-70'>Address</p>
                                <p className='text-base font-normal leading-6 mb-4'>{actualAddress.street} / {actualAddress.apartment}, {actualAddress.city}, {actualAddress.postalCode}</p> 
-                               <p className='text-sm font-medium leading-4 text-gray-70'>Shepment method</p>
+                               <p className='text-sm font-medium leading-4 text-gray-70'>Shipment method</p>
                                <p className='text-base font-normal leading-6 mb-6'>{shipment}</p>
                                <p className='flex justify-between text-base font-medium leading-6 mb-4'>Subtotal <span className='leading-8'>${totalPrice}</span></p>
                                <p className='flex justify-between text-base font-normal leading-8 text-gray-70'>Estimated Tax <span className='font-medium text-black'>$50</span></p>
