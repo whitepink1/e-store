@@ -15,6 +15,8 @@ const Pagination = ({totalItems, currentPage, hasNextPage, totalPages, perPage}:
     const router = useRouter();
     const pathname = usePathname();
     
+    if (totalPages <= 1) return null;
+    
     useEffect(() => {
         if (currentPage < 1 || currentPage > totalPages) {
             console.log('Fixing invalid page parameter:', currentPage, totalPages);
@@ -26,7 +28,6 @@ const Pagination = ({totalItems, currentPage, hasNextPage, totalPages, perPage}:
         }
     }, [currentPage, totalPages, pathname, router, searchParams]);
 
-    if (totalPages <= 1) return null;
 
     const changePage = (page: number) => {
         const params = new URLSearchParams(searchParams.toString());
