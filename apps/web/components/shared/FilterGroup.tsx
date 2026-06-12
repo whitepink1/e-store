@@ -1,9 +1,18 @@
 'use client'
-import { useRouter, useSearchParams } from 'next/navigation';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useState } from 'react';
 
+interface FieldType {
+  label: string;
+  value: string;
+}
+
 interface FilterGroupProps {
-  item: { name: string; type: string; fields: string[] };
+  item: { 
+    name: string; 
+    type: string; 
+    fields: (string | FieldType)[];
+  };
   open: boolean;
 }
 
@@ -11,20 +20,21 @@ export const FilterGroup = ({ item, open }: FilterGroupProps) => {
   const [isOpen, setIsOpen] = useState(open || false);
   const router = useRouter();
   const searchParams = useSearchParams();
+  const pathname = usePathname();
   const activeFilters = searchParams.getAll(item.type);
 
-  const handleCheckboxChange = (option: string) => {
+  const handleCheckboxChange = (value: string) => {
     const params = new URLSearchParams(searchParams.toString());
 
-    if (activeFilters.includes(option)) {
-      const updatedFilters = activeFilters.filter(val => val !== option);
+    if (activeFilters.includes(value)) {
+      const updatedFilters = activeFilters.filter(val => val !== value);
       params.delete(item.type);
       updatedFilters.forEach(val => params.append(item.type, val));
     } else {
-      params.append(item.type, option);
+      params.append(item.type, value);
     }
 
-    router.push(`?${params.toString()}`);
+    router.push(`${pathname}?${params.toString()}`);
   };
 
   return (
@@ -44,15 +54,19 @@ export const FilterGroup = ({ item, open }: FilterGroupProps) => {
       </button>
       {isOpen && (
         <div className="flex flex-col gap-2 mt-4 pl-1 animate-fadeIn">
-          {item.fields.map((option) => { 
-            const isChecked = activeFilters.includes(option);
+          {item.fields.map((field, index) => {
+            const isObject = typeof field === 'object' && field !== null;
+            const label = isObject ? (field as FieldType).label : (field as string);
+            const value = isObject ? (field as FieldType).value : (field as string);
+
+            const isChecked = activeFilters.includes(value);
             return (
-            <label key={option} className="flex items-center gap-2 text-sm text-gray-600 cursor-pointer">
+            <label key={index} className="flex items-center gap-2 text-sm text-gray-600 cursor-pointer">
               <input 
                 type="checkbox" 
-                value={option}
+                value={value}
                 checked={isChecked}
-                onChange={() => handleCheckboxChange(option)}
+                onChange={() => handleCheckboxChange(value)}
                 className="rounded 
                     border
                     border-gray-10 
@@ -69,7 +83,7 @@ export const FilterGroup = ({ item, open }: FilterGroupProps) => {
                     checked:after:text-[10px]
                     checked:after:translate-y-[-0.5px]"
               />
-              <span className='font-medium text-base'>{option}</span>
+              <span className='font-medium text-base'>{label}</span>
             </label>
           )})}
         </div>

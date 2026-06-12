@@ -88,20 +88,22 @@ export async function getProductsAction({ category, filters}: GetProductsParams)
     const BACKEND_URL = process.env.EXTERNAL_BACKEND_URL;
     try {
         const queryParams = new URLSearchParams();
-        console.log(filters)
         queryParams.append('category', category);
         Object.entries(filters).forEach(([key, value]) => {
-            if (value !== undefined) {
+            if (value !== undefined && value !== null) {
                 if (Array.isArray(value)) {
-                    value.forEach(val => queryParams.append(key, val));
+                    value.filter(Boolean).forEach(val => queryParams.append(key, val));
+                } else if (typeof value === 'string' && value.includes(',')) {
+                    value.split(',').forEach(val => queryParams.append(key, val));
                 } else {
-                    queryParams.append(key, value);
+                    queryParams.append(key, value.toString());
                 }
             }
         });
         const fullUrl = `${BACKEND_URL}/products?${queryParams.toString()}`;
         const response = await fetch(fullUrl, {
-            cache: 'no-store' 
+            cache: 'no-store',
+            next: { revalidate: 0 }
         });
         if (!response.ok) {
             let errorMessage = "Fetching error";

@@ -68,13 +68,13 @@ const SmartphoneFilters = z.object({
   protection_class: z.string().min(1),
 });
 const SmartwatchesFilters = z.object({
-  case_size: z.string().min(1),
+  case_size: z.number().min(1),
   display_type: z.string().min(1),
   strap_material: z.string().min(1),
 });
 const CamerasFilters = z.object({
   sensor_type: z.string().min(1),
-  effective_pixels: z.string().min(1),
+  effective_pixels: z.number().min(1),
   video_resolution: z.string().min(1),
 });
 const HeadphonesFilters = z.object({

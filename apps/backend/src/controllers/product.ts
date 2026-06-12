@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import { Product } from "../models/Product";
 import { User } from '../models/User';
 import { deleteImagesFromCloud } from '../utils/actions';
+import { catalogFilter } from '../utils/data';
 
 interface AuthenticatedRequest extends Request {
   user?: {
@@ -13,23 +14,73 @@ interface AuthenticatedRequest extends Request {
 export const getProducts = async (req: Request, res: Response, next: NextFunction) => {
   const perPage = Number(process.env.PUBLIC_PRODUCTS_PER_PAGE);
   try {
-    const { category, brand, order, page } = req.query;
+    const { category, brand, order, page, ...dynamicFilters } = req.query;
     const actualPage = page ? Number(page) : 1;
     const filterObject: any = {};
 
     let sortObject: any = { createdAt: -1 };
-    if (order === 'price_asc') sortObject = { price: 1 };
-    if (order === 'price_desc') sortObject = { price: -1 };
-    if (order === 'name') sortObject = { title: -1 };
+    if (order === 'price_asc') sortObject = { 'variants.0.finalPrice': 1 };
+    if (order === 'price_desc') sortObject = { 'variants.0.finalPrice': -1 };
+    if (order === 'name') sortObject = { title: 1 };
 
 
     if (category) filterObject.category = category;
-    if (brand) filterObject.brand = brand;
+    const ensureArray = (val: any): string[] => {
+      if (!val) return [];
+      if (Array.isArray(val)) return val.map(String);
+      if (typeof val === 'string') return val.split(',');
+      return [String(val)];
+    };
+
+    if (brand) {
+      const brandArray = ensureArray(brand);
+      filterObject.brand = { $in: brandArray };
+    }
+
+    const parseFilterValue = (val: any) => {
+      if (typeof val === 'string' && val.includes('-')) {
+        const [min, max] = val.split('-').map(Number);
+        
+        if (!isNaN(min) && !isNaN(max)) {
+          return { $gte: min, $lte: max };
+        }
+      }
+      
+      if (typeof val === 'string' && !isNaN(Number(val)) && val.trim() !== '') {
+        return Number(val);
+      }
+
+      return val;
+    };
+
+    if (category && typeof category === 'string' && catalogFilter[category]) {
+      const allowedFilters = catalogFilter[category].map(filter => filter.type);
+
+      Object.entries(dynamicFilters).forEach(([key, value]) => {
+        if (allowedFilters.includes(key) && value) {
+          const dbPath = `filterAttributes.${key}`;
+  
+          if (Array.isArray(value)) {
+            const hasRange = value.some(v => typeof v === 'string' && v.includes('-'));
+            if (hasRange) {
+              if (!filterObject.$or) filterObject.$or = [];
+              value.forEach(v => {
+                filterObject.$or.push({[dbPath]: parseFilterValue(v)})
+              });
+            } else {
+              filterObject[dbPath] = {$in: value.map(parseFilterValue)}
+            }
+          } else {
+            filterObject[dbPath] = parseFilterValue(value);
+          }
+        }
+      })
+    };
+
     const [totalItems, products] = await Promise.all([
       Product.find(filterObject).sort(sortObject).countDocuments(),
-      Product.find().find(filterObject).sort(sortObject)
-        .select('title slug category variants') 
-        .sort({ createdAt: -1 })                  
+      Product.find(filterObject).sort(sortObject)
+        .select('title slug category variants')                
         .skip((actualPage - 1) * perPage)
         .limit(perPage)
     ]);
