@@ -71,13 +71,8 @@ const NavSearch = () => {
           height={24}
           alt="Search product"
           className='absolute top-1/2 -translate-y-1/2 left-4'/>
-        {isLoading && (
-          <span className="absolute right-3 top-4 text-xs text-gray-400 animate-pulse">
-            ...
-          </span>
-        )}
         {isOpen && results.length > 0 && (
-          <div className="absolute left-0 right-0 mt-2 bg-white border border-gray-200 rounded-lg shadow-xl z-50 max-h-[350px] overflow-y-auto">
+          <div className="absolute left-0 right-0 mt-2 bg-white border border-gray-200 rounded-lg shadow-xl z-50 max-h-90 overflow-y-auto">
             {results.map((product) => (
               <Link 
                 key={product._id} 
@@ -99,7 +94,7 @@ const NavSearch = () => {
                     {product.title}
                   </span>
                   <span className="text-xs text-gray-500">
-                    {product.variants?.[0]?.finalPrice} ₽
+                    {product.variants?.[0]?.finalPrice} $
                   </span>
                 </div>
               </Link>

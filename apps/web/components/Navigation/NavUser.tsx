@@ -7,9 +7,11 @@ import { getCartAction, getFavouriteAction } from '../../app/actions/user';
 interface NavUserProps {
   isLoggedIn: boolean;
   onLogout: () => Promise<void>;
+  addClass?: string;
+  onClick?: () => void;
 }
 
-const NavUser = ({ isLoggedIn, onLogout }: NavUserProps) => {
+const NavUser = ({ addClass, isLoggedIn, onLogout, onClick = () => {} }: NavUserProps) => {
   const [favCount, setFavCount] = useState(0);
   const [cartCount, setCartCount] = useState(0);
 
@@ -26,6 +28,11 @@ const NavUser = ({ isLoggedIn, onLogout }: NavUserProps) => {
       console.error("Failed to load favourites count.", err);
     }
   }, [isLoggedIn]);
+
+  const handleLogout = () => {
+    onClick();
+    onLogout();
+  }
 
   const checkCart = useCallback(async () => {
     if (!isLoggedIn) {
@@ -58,10 +65,10 @@ const NavUser = ({ isLoggedIn, onLogout }: NavUserProps) => {
   }, [checkFavourites]);
 
   return (
-    <div className='hidden items-center gap-6 lg:flex'>
+    <div className={`${addClass ? `${addClass}` : 'hidden items-center gap-6 lg:flex'}`}>
       {isLoggedIn ? (
         <>
-          <Link href='/profile?tab=favourite' className='w-8 h-8 relative flex justify-center items-center'>
+          <Link href='/profile?tab=favourite' onClick={onClick} className='w-8 h-8 relative flex justify-center items-center'>
             <Image
               src='/icon/favourite.png'
               width={20}
@@ -69,7 +76,7 @@ const NavUser = ({ isLoggedIn, onLogout }: NavUserProps) => {
               alt='Favourite button'/>
             {favCount > 0 && <p className='h-5 w-5 left-4 bottom-3 absolute flex items-center justify-center text-xs font-medium bg-gray-10 rounded-full'>{favCount}</p>}
           </Link>
-          <Link href='/profile?tab=cart' className='w-8 h-8 relative flex justify-center items-center'>
+          <Link href='/profile?tab=cart' onClick={onClick} className='w-8 h-8 relative flex justify-center items-center'>
             <Image
               src='/icon/cart.png'
               width={20}
@@ -77,14 +84,14 @@ const NavUser = ({ isLoggedIn, onLogout }: NavUserProps) => {
               alt='Cart button'/>
             {cartCount > 0 && <p className='h-5 w-5 left-5 bottom-3 absolute flex items-center justify-center text-xs font-medium bg-gray-10 rounded-full'>{cartCount}</p>}
           </Link>
-          <Link href='/profile?tab=profile' className='w-8 h-8 flex justify-center items-center'>
+          <Link href='/profile?tab=profile' onClick={onClick} className='w-8 h-8 flex justify-center items-center'>
             <Image
               src='/icon/profile.png'
               width={20}
               height={20}
               alt='Profile button'/>
           </Link>
-          <button onClick={onLogout} className='w-8 h-8 flex justify-center items-center cursor-pointer hover:scale-105'>
+          <button onClick={handleLogout} className='w-8 h-8 flex justify-center items-center cursor-pointer hover:scale-105'>
             <Image
               src='/icon/logout.png'
               width={20}
@@ -94,10 +101,10 @@ const NavUser = ({ isLoggedIn, onLogout }: NavUserProps) => {
         </>)
         :
         (<>
-          <Link href="/login" className="text-base font-medium text-gray-200 hover:text-black transition">
+          <Link href="/login" onClick={onClick} className="text-base font-medium text-gray-200 hover:text-black transition">
             Sign In
           </Link>
-          <Link href="/sign-up" className="text-base font-medium border border-black px-4 py-1.5 rounded hover:bg-black hover:text-white transition">
+          <Link href="/sign-up" onClick={onClick} className="text-base font-medium border border-black px-4 py-1.5 rounded hover:bg-black hover:text-white transition">
             Sign Up
           </Link>
         </>

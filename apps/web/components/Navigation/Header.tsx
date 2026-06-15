@@ -32,7 +32,7 @@ const Header = ({ isLoggedIn }: HeaderProps) => {
           alt='Cyber logo' />
       </Link>
       <NavSearch />
-      <HamburgerMenu />
+      <HamburgerMenu isLoggedIn={isLoggedIn} onLogout={handleLogout}/>
       <div className='hidden gap-10 lg:flex'>
         {headerNav.map(link => (
           <Link 
