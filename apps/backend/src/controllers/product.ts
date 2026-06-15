@@ -132,6 +132,29 @@ export const getProduct = async (req: Request, res: Response, next: NextFunction
   }
 };
 
+export const getSearchProduct = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const {search} = req.body;
+    if (!search || typeof search !== 'string' || search.trim() === '' || search.trim().length < 2) {
+      return res.status(200).json({products: []})
+    };
+
+    const searchRegex = new RegExp(search.trim(), 'i');
+
+    const products = await Product.find({title: {$regex: searchRegex}})
+      .select('_id title slug category variants')
+      .limit(5);
+
+    res.status(200).json({
+      message: 'Fetched products successfully.',
+      products: products,
+    });
+  } catch (err: any) {
+    if (!err.statusCode) err.statusCode = 500;
+    return next(err);
+  }
+};
+
 export const getMyProducts = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const authReq = req as AuthenticatedRequest;

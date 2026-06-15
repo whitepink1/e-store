@@ -141,6 +141,43 @@ export async function getProductsAction({ category, filters}: GetProductsParams)
     }
 };
 
+export async function getSearchProductsAction(search: string) {
+    const BACKEND_URL = process.env.EXTERNAL_BACKEND_URL;
+    try {
+        const response = await fetch(`${BACKEND_URL}/products/search`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({search}),
+            cache: 'no-store' 
+        });
+        if (!response.ok) {
+            let errorMessage = "Fetching error";
+            try {
+                const errorResult = await response.json();
+                errorMessage = errorResult.message || errorMessage;
+            } catch {
+                errorMessage = `Server responded with status ${response.status}`;
+            }
+            return { 
+                success: false, 
+                error: "server_error", 
+                message: errorMessage 
+            };
+        };
+        
+        const result = await response.json();
+        return { success: true, products: result.products };
+    } catch (error: any) {
+        return { 
+            success: false, 
+            error: "network_error", 
+            message: error.message || "Network connection failed" 
+        };
+    }
+};
+
 export async function getProductBySlugAction(slug: string) {
     const BACKEND_URL = process.env.EXTERNAL_BACKEND_URL;
     try {
