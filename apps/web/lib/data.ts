@@ -3,7 +3,7 @@ interface FieldType  {
     value: string;
 }
 
-interface FilterField {
+export interface FilterField {
   name: string;
   type: string;
   fields: FieldType[] | string[];

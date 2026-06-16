@@ -2,7 +2,7 @@ import React from 'react'
 
 const ProductCatalogCardSkeleton = () => {
     return (
-        <div className='w-72 h-110 flex flex-col justify-between items-center relative bg-white p-4 rounded-lg border border-gray-100 animate-pulse'>
+        <div className='w-full min-h-105 flex flex-col justify-between items-center relative bg-white p-4 rounded-lg border border-gray-100 animate-pulse'>
             <div className='self-end h-8 w-8 bg-gray-200/75 rounded-full'></div>
             <div className='h-45 w-45 bg-gray-200/75 rounded-lg flex items-center justify-center mt-6'>
                 <svg className="w-10 h-10 text-white/75" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 18">

@@ -4,11 +4,11 @@ import { catalogOrder } from '../../lib/data';
 import { useSearchParams, useRouter } from 'next/navigation';
 
 interface CatalogHeaderProps {
-  total: number;
   order?: string | string[];
+  children: React.ReactNode
 }
 
-const CatalogHeader = ({total = 0, order}: CatalogHeaderProps) => {
+const CatalogHeader = ({order, children}: CatalogHeaderProps) => {
     const router = useRouter();
     const searchParams = useSearchParams();
     const currentOrderValue = typeof order === 'string' ? order : 'title';
@@ -22,11 +22,9 @@ const CatalogHeader = ({total = 0, order}: CatalogHeaderProps) => {
 
     return (
         <div className='w-full flex justify-between'>
-            <p className='font-medium text-base text-gray-20/85'>Selected Products: 
-                <span className='text-[20px] text-black'> {total}</span>
-            </p>
+            {children}
             <select 
-                className='w-64 border border-gray-500 p-1' 
+                className='w-[45dvw] border border-gray-500 p-1 md:w-64' 
                 value={currentOrderValue}
                 onChange={handleOrderChange}>
                 {catalogOrder.map(item => {

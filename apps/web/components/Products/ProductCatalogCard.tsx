@@ -27,7 +27,7 @@ const ProductCatalogCard = ({product, initialIsFavourite = false}: ExtendedProdu
         }
     };
     return (
-        <div className='w-72 h-110 flex flex-col justify-between items-center relative bg-white-100 p-4 rounded-lg z-10'>
+        <div className='w-full min-h-105 flex flex-col justify-between items-center relative bg-white-100 p-4 rounded-lg z-10'>
             <button className='self-end h-8 z-15 cursor-pointer' onClick={handleFavourite}>
                 <Image 
                     src={isFavourite ? '/icon/favourite_red.png' : '/icon/favourite_gray.png'}
