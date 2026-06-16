@@ -174,7 +174,6 @@ export const catalogOrder = [
   {name: 'By Name', type: 'name'},
   {name: 'Price Low to High', type: 'price_asc'},
   {name: 'Price High to Low', type: 'price_desc'},
-  {name: 'By Rating', type: 'rating'},
 ];
 
 export const productColors = [

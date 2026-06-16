@@ -92,14 +92,11 @@ export async function getProductsAction({ category, filters}: GetProductsParams)
         Object.entries(filters).forEach(([key, value]) => {
             if (value !== undefined && value !== null) {
                 if (Array.isArray(value)) {
-                    value.filter(Boolean).forEach(val => queryParams.append(key, val));
-                } else if (typeof value === 'string' && value.includes(',')) {
-                    value.split(',').forEach(val => queryParams.append(key, val));
+                    queryParams.append(key, value.filter(Boolean).join(','));
                 } else {
                     queryParams.append(key, value.toString());
                 }
-            }
-        });
+        }});
         const fullUrl = `${BACKEND_URL}/products?${queryParams.toString()}`;
         const response = await fetch(fullUrl, {
             cache: 'no-store',

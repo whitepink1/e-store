@@ -1,5 +1,4 @@
 'use client'
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useState } from 'react';
 
 interface FieldType {
@@ -14,28 +13,12 @@ interface FilterGroupProps {
     fields: (string | FieldType)[];
   };
   open: boolean;
+  activeFilters: string[];
+  onFilterChange: (type: string, value: string) => void;
 }
 
-export const FilterGroup = ({ item, open }: FilterGroupProps) => {
+export const FilterGroup = ({ item, open, activeFilters, onFilterChange }: FilterGroupProps) => {
   const [isOpen, setIsOpen] = useState(open || false);
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const pathname = usePathname();
-  const activeFilters = searchParams.getAll(item.type);
-
-  const handleCheckboxChange = (value: string) => {
-    const params = new URLSearchParams(searchParams.toString());
-
-    if (activeFilters.includes(value)) {
-      const updatedFilters = activeFilters.filter(val => val !== value);
-      params.delete(item.type);
-      updatedFilters.forEach(val => params.append(item.type, val));
-    } else {
-      params.append(item.type, value);
-    }
-
-    router.push(`${pathname}?${params.toString()}`);
-  };
 
   return (
     <div className="w-full">
@@ -66,7 +49,7 @@ export const FilterGroup = ({ item, open }: FilterGroupProps) => {
                 type="checkbox" 
                 value={value}
                 checked={isChecked}
-                onChange={() => handleCheckboxChange(value)}
+                onChange={() => onFilterChange(item.type, value)}
                 className="rounded 
                     border
                     border-gray-10 

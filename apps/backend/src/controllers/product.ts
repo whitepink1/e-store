@@ -59,19 +59,16 @@ export const getProducts = async (req: Request, res: Response, next: NextFunctio
       Object.entries(dynamicFilters).forEach(([key, value]) => {
         if (allowedFilters.includes(key) && value) {
           const dbPath = `filterAttributes.${key}`;
-  
-          if (Array.isArray(value)) {
-            const hasRange = value.some(v => typeof v === 'string' && v.includes('-'));
-            if (hasRange) {
-              if (!filterObject.$or) filterObject.$or = [];
-              value.forEach(v => {
-                filterObject.$or.push({[dbPath]: parseFilterValue(v)})
-              });
-            } else {
-              filterObject[dbPath] = {$in: value.map(parseFilterValue)}
-            }
+          const valuesArray = ensureArray(value);
+          const hasRange = valuesArray.some(v => typeof v === 'string' && v.includes('-'));
+
+          if (hasRange) {
+            if (!filterObject.$or) filterObject.$or = [];
+            valuesArray.forEach(v => {
+              filterObject.$or.push({ [dbPath]: parseFilterValue(v) });
+            });
           } else {
-            filterObject[dbPath] = parseFilterValue(value);
+            filterObject[dbPath] = { $in: valuesArray.map(parseFilterValue) };
           }
         }
       })
