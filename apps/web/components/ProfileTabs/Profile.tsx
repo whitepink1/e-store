@@ -62,10 +62,10 @@ const Profile = () => {
                     </div>
                     <PersonalData name={user?.name || ''} surname={user?.surname || ''}/>
                     {user?.address.map(item => (
-                        <div key={item._id} className='w-160 flex flex-col items-start gap-3 bg-white-100 p-6 rounded-lg mb-6'>
+                        <div key={item._id} className=' flex flex-col items-start gap-3 bg-white-100 p-6 rounded-lg mb-6 md:w-160'>
                             <p className='text-white text-xs font-medium bg-black rounded-sm px-2 py-1'>{item.name}</p>
                             <div className='w-full flex justify-between'>
-                                <p className='text-black-50 text-base leading-6'>{item.country}, {item.city}, {item.street} {item.apartment && '#' + item.apartment} / {item.postalCode}</p>
+                                <p className='text-black-50 text-base leading-6 max-md:w-[80%]'>{item.country}, {item.city}, {item.street} {item.apartment && '#' + item.apartment} / {item.postalCode}</p>
                                 <button className='cursor-pointer hover:scale-105' onClick={() => handleDeleteAddress(item._id || '')}>
                                     <Image
                                         src='/icon/delete-x.png'

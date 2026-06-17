@@ -69,11 +69,11 @@ const AsyncProductsGrid = async ({ category, filters }: { category: string, filt
 
 const GridSkeleton = () => (
   <div className="w-full flex flex-col gap-4">
-    <div className="w-full flex justify-between animate-pulse">
-      <div className="h-6 bg-gray-200/75 w-32 rounded"></div>
+    <div className="w-full flex justify-between animate-pulse max-md:gap-4">
+      <div className="h-10 bg-gray-200/75 w-64 rounded md:h-6 md:w-32"></div>
       <div className="h-10 bg-gray-200/75 w-64 rounded"></div>
     </div>
-    <div className='grid grid-cols-3 gap-4'>
+    <div className='w-full grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-y-6 mt-6'>
       {Array.from({ length: 6 }).map((_, i) => <ProductCatalogCardSkeleton key={i} />)}
     </div>
   </div>

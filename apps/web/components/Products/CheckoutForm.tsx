@@ -153,7 +153,7 @@ const CheckoutForm = ({products, orderItems}: CheckoutFormProps) => {
     };
     return (
         <div className='flex flex-col px-basic'>
-            <div className='flex justify-between items-center py-18'>
+            <div className='flex justify-between items-center py-7 md:py-18'>
                 {checkoutSteps.map(item => (
                     <div key={item.dataName} className={`flex items-center ${step === item.dataName ? '' : 'opacity-35 cursor-pointer'}`} onClick={() => setStep(item.dataName as StepProps)}>
                         <Image
@@ -169,13 +169,13 @@ const CheckoutForm = ({products, orderItems}: CheckoutFormProps) => {
                     </div>
                 ))}
             </div>
-            <div className='flex justify-center mt-12'>
+            <div className='flex justify-center mt-5 md:mt-12'>
                 {step === 'Address' && 
                     <MotionDiv className='flex flex-col'>
                         <p className='text-lg font-semibold leading-6 mb-8'>Select Address</p>
                         <div>
                             {user?.address.map(item => (
-                                <div key={item._id} className='w-160 flex bg-white-100 rounded-lg p-6 mb-6'>
+                                <div key={item._id} className='flex bg-white-100 rounded-lg p-6 mb-6 md:w-160'>
                                     <label className="flex items-center cursor-pointer select-none self-start">
                                         <input 
                                             type="radio" 
@@ -195,7 +195,7 @@ const CheckoutForm = ({products, orderItems}: CheckoutFormProps) => {
                                     <div className='w-full flex flex-col items-start gap-3'>
                                         <p className='text-white text-xs font-medium bg-black rounded-sm px-2 py-1'>{item.name}</p>
                                         <div className='w-full flex justify-between'>
-                                            <p className='text-black-50 text-base leading-6'>{item.country}, {item.city}, {item.street} {item.apartment && '#' + item.apartment} / {item.postalCode}</p>
+                                            <p className='w-[80%] text-black-50 text-base leading-6'>{item.country}, {item.city}, {item.street} {item.apartment && '#' + item.apartment} / {item.postalCode}</p>
                                             <button className='cursor-pointer hover:scale-105' onClick={() => handleDeleteAddress(item._id || '')}>
                                                 <Image
                                                     src='/icon/delete-x.png'
@@ -213,7 +213,7 @@ const CheckoutForm = ({products, orderItems}: CheckoutFormProps) => {
                     </MotionDiv>
                 }
                 {step === 'Shipping' && 
-                    <MotionDiv  className='w-160 flex flex-col pb-12'>
+                    <MotionDiv  className='flex flex-col pb-12 md:w-160'>
                         <p className='text-lg font-semibold leading-6 mb-8'>Shipment Method</p>
                         <div className='flex flex-col gap-4'>
                             {shipmentMethod.map(item => (
@@ -245,7 +245,7 @@ const CheckoutForm = ({products, orderItems}: CheckoutFormProps) => {
                     </MotionDiv>
                 }
                 {step === 'Payment' &&
-                    <MotionDiv className='w-full grid grid-cols-2 gap-24'>
+                    <MotionDiv className='w-full grid grid-row-2 gap-24 md:grid-cols-2'>
                         <div className='w-full flex flex-col items-start border border-white-150 rounded-[10px] gap-6 py-8 px-6'>
                             <p className='text-xl font-medium leading-4'>Summary</p>
                             <div className='w-full flex flex-col gap-4'>
@@ -281,7 +281,7 @@ const CheckoutForm = ({products, orderItems}: CheckoutFormProps) => {
                                 <button
                                     type="submit"
                                     disabled={isLoading}
-                                    className="w-full bg-black text-white py-4 rounded-xl font-medium disabled:opacity-50"
+                                    className="w-full bg-black text-white py-4 my-15 rounded-xl font-medium disabled:opacity-50"
                                 >
                                     {isLoading ? 'Processing...' : `Pay $${totalPrice + (shipmentPrice || 0) + 50}`}
                                 </button>

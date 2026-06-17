@@ -7,6 +7,7 @@ export type ButtonVariant = "white" | "black" | "whiteFill" | "blackFill" | "red
 interface ButtonProps {
   children: React.ReactNode;
   href?: string;
+  backforward?: boolean;
   onClick?: () => void;
   variant?: ButtonVariant;
   className?: string;
@@ -17,13 +18,14 @@ const Button = ({
   children,
   href,
   onClick,
+  backforward = false,
   variant = 'white',
   className,
   type = "button",
 }: ButtonProps) => {
   const baseStyles = "inline-flex items-center justify-center px-12 py-3 rounded-md font-medium transition-colors disabled:opacity-50 cursor-pointer";
   const variants = {
-    white: "bg-transparent text-black border-1",
+    white: "bg-transparent text-black border-1 border-white text-white",
     black: "bg-transparent text-black border-1",
     red: "bg-red-50 text-red-700 border-1 border-red-200 hover:bg-red-100",
     whiteFill: "bg-transparent border-2 border-white text-white hover:bg-white hover:text-black",
@@ -55,7 +57,7 @@ const Button = ({
     <motion.button
       {...motionProps}
       type={type}
-      onClick={onClick}
+      onClick={backforward ? () => history.back() : onClick}
       className={fullClassName}
     >
       {children}

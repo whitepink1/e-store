@@ -9,6 +9,7 @@ import RatingComponent from '../../../../components/Products/RatingComponent';
 import { getCartAction, getFavouriteAction } from '../../../actions/user';
 import FavouriteButton from '../../../../components/Products/FavouriteButton';
 import CartButton from '../../../../components/Products/CartButton';
+import Button from '../../../../components/shared/Button';
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -46,6 +47,7 @@ const page = async ({ params, searchParams }: PageProps) => {
 
   return (
     <div>
+      <Button backforward={true} className='absolute -translate-y-1/2 z-15' variant='black'>Back</Button>
       <section className='w-full flex justify-center gap-20 lg:gap-40 max-lg:mt-10 max-md:flex-col max-md:items-center'>
         <div className='relative w-100 h-125 max-sm:w-[90%]'>
           <Image

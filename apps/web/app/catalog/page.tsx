@@ -9,7 +9,7 @@ import { browseCategory } from "../../lib/data";
 
 const page = () => {
   return (
-    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 py-8">
+    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4 py-8">
       {browseCategory.map((item) => (
         <motion.div
             key={item.name}

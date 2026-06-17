@@ -34,7 +34,7 @@ const AddressData = () => {
     };
     return (<>
             {isVisible ?
-            <form onSubmit={handleSubmit(onSubmit)} className="w-160 grid grid-cols-3 gap-3 my-5">
+            <form onSubmit={handleSubmit(onSubmit)} className="grid grid-cols-3 gap-3 my-5 md:w-160">
                 <div className="">
                     <input {...register('name')} placeholder="Address Name" className={`w-full border p-2 rounded ${errors.name && 'error-input'}`} />
                 </div>
@@ -61,7 +61,7 @@ const AddressData = () => {
                 </button>
             </form>
             :
-            <button className="w-160 flex flex-col items-center cursor-pointer group" onClick={() => setIsVisible(true)}>
+            <button className="w-[85dvw] flex flex-col items-center cursor-pointer group mx-auto md:w-160" onClick={() => setIsVisible(true)}>
                 <p className="relative mx-auto group-hover:scale-105">
                     <Image
                         src='/icon/plus.png'
@@ -69,7 +69,7 @@ const AddressData = () => {
                         height={24}
                         alt='Add adress'/>
                 </p>
-                <div className="w-160 absolute h-3 border-b border-dashed" />
+                <div className="w-[85dvw] absolute h-3 border-b border-dashed md:w-160" />
                 <p className="text-sm leading-4 mt-2 group-hover:scale-105">Add New Address</p>
             </button>}
         </>

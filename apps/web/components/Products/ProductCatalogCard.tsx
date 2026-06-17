@@ -4,6 +4,7 @@ import { handleFavouriteAction } from '../../app/actions/user';
 import { ProductCardProps } from '../../lib/validations/product';
 import Button from '../shared/Button';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 
 interface ExtendedProductCardProps extends ProductCardProps {
     initialIsFavourite?: boolean;
@@ -11,6 +12,7 @@ interface ExtendedProductCardProps extends ProductCardProps {
 
 const ProductCatalogCard = ({product, initialIsFavourite = false}: ExtendedProductCardProps) => {
     const [isFavourite, setIsFavourite] = useState(initialIsFavourite);
+    const router = useRouter();
 
     const handleFavourite = async () => {
         setIsFavourite((prev) => !prev);
@@ -21,6 +23,7 @@ const ProductCatalogCard = ({product, initialIsFavourite = false}: ExtendedProdu
                 alert(result.message || "Updating favourite product failed");
             } else {
                 window.dispatchEvent(new Event('wishlist-updated'));
+                router.refresh();
             }
         } catch(err) {
             console.log(err);

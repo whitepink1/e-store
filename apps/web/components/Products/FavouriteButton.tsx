@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { handleFavouriteAction } from "../../app/actions/user";
 import Button from "../shared/Button";
+import { useRouter } from "next/navigation";
 
 interface FavButtonProps {
     initialIsFavourite: boolean;
@@ -11,6 +12,8 @@ interface FavButtonProps {
 
 const FavouriteButton = ({initialIsFavourite, id}: FavButtonProps) => {
     const [isFavourite, setIsFavourite] = useState(initialIsFavourite);
+    const router = useRouter();
+
     const handleFavourite = async () => {
         setIsFavourite((prev) => !prev);
         try {
@@ -20,6 +23,7 @@ const FavouriteButton = ({initialIsFavourite, id}: FavButtonProps) => {
                 alert(result.message || "Updating favourite product failed");
             } else {
                 window.dispatchEvent(new Event('wishlist-updated'));
+                router.refresh();
             }
             } catch(err) {
                 console.log(err);

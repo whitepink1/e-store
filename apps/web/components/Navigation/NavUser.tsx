@@ -68,7 +68,7 @@ const NavUser = ({ addClass, isLoggedIn, onLogout, onClick = () => {} }: NavUser
     <div className={`${addClass ? `${addClass}` : 'hidden items-center gap-6 lg:flex'}`}>
       {isLoggedIn ? (
         <>
-          <Link href='/profile?tab=favourite' onClick={onClick} className='w-8 h-8 relative flex justify-center items-center'>
+          <Link href='/profile?tab=favourite' onClick={onClick} className='w-8 h-8 relative flex justify-center items-center hover:scale-105'>
             <Image
               src='/icon/favourite.png'
               width={20}
@@ -76,7 +76,7 @@ const NavUser = ({ addClass, isLoggedIn, onLogout, onClick = () => {} }: NavUser
               alt='Favourite button'/>
             {favCount > 0 && <p className='h-5 w-5 left-4 bottom-3 absolute flex items-center justify-center text-xs font-medium bg-gray-10 rounded-full'>{favCount}</p>}
           </Link>
-          <Link href='/profile?tab=cart' onClick={onClick} className='w-8 h-8 relative flex justify-center items-center'>
+          <Link href='/profile?tab=cart' onClick={onClick} className='w-8 h-8 relative flex justify-center items-center hover:scale-105'>
             <Image
               src='/icon/cart.png'
               width={20}
@@ -84,7 +84,7 @@ const NavUser = ({ addClass, isLoggedIn, onLogout, onClick = () => {} }: NavUser
               alt='Cart button'/>
             {cartCount > 0 && <p className='h-5 w-5 left-5 bottom-3 absolute flex items-center justify-center text-xs font-medium bg-gray-10 rounded-full'>{cartCount}</p>}
           </Link>
-          <Link href='/profile?tab=profile' onClick={onClick} className='w-8 h-8 flex justify-center items-center'>
+          <Link href='/profile?tab=profile' onClick={onClick} className='w-8 h-8 flex justify-center items-center hover:scale-105'>
             <Image
               src='/icon/profile.png'
               width={20}

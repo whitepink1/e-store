@@ -38,7 +38,7 @@ const page = () => {
     };
     return (
         <div className="flex flex-col min-h-screen lg:flex-row">
-            <aside className="border-r border-gray-500/90 p-4 space-y-2 max-lg:grid max-sm:grid-cols-4 max-lg:grid-cols-5 max-lg:gap-3 lg:w-64">
+            <aside className="border-gray-500/90 p-4 space-y-2 max-lg:grid max-sm:grid-cols-4 max-lg:grid-cols-5 max-lg:gap-3 lg:w-64 lg:border-r">
                 {profileTabs.map(item => (
                     <button 
                         key={item.tabTag}

@@ -117,8 +117,8 @@ const Cart = () => {
 
     if(isLoading) return <p>Cart is loading...</p>
     return (
-        <div className="flex flex-col items-center justify-center mx-auto my-10 2xl:flex-row 2xl:gap-12 2xl:my-28">
-            <div className="flex flex-col items-start lg:min-w-150">
+        <div className={`flex flex-col items-center justify-center mx-auto my-10 2xl:flex-row 2xl:gap-12 2xl:my-28 ${cart.length > 0 ? 'items-center' : 'items-start'}`}>
+            <div className='flex flex-col items-start lg:min-w-150'>
                 <h2 className="text-2xl font-semibold mb-10">Shopping Cart</h2>
                 {cart.length > 0 ?
                     cart.map((item, index) => {
@@ -126,7 +126,7 @@ const Cart = () => {
                         const currentVariant = selectedProduct?.variants[Number(item.variantId)] || selectedProduct?.variants[0];
                         
                         return (
-                            <div key={index} className={`w-140 grid grid-cols-7 items-center gap-2 pt-4 pb-8 mb-6 not-last:border-b not-last:border-white-250`}>
+                            <div key={index} className={`grid grid-cols-7 items-center gap-2 pt-4 pb-8 mb-6 not-last:border-b not-last:border-white-250 md:w-140`}>
                                 <Image
                                     src={currentVariant?.images[0] || ''}
                                     height={90}
@@ -159,7 +159,7 @@ const Cart = () => {
                         )
                     })
                 :
-                <p>Your cart is empty.</p>}
+                <p className="mb-15">Your cart is empty.</p>}
             </div>
             <div className="flex flex-col gap-6 border border-white-150 rounded-[10px] py-14 px-16">
                 <h3 className="text-xl font-bold mb-4">Order Summary</h3>

@@ -13,7 +13,7 @@ export default function Home() {
           <p className="text-2xl font-semibold text-gray-300 max-lg:text-center">Pro.Beyond.</p>
           <p className="text-7xl font-extralight text-white lg:text-8xl max-lg:text-center">IPhone 16 <span className="font-semibold">Pro</span></p>
           <p className="text-lg font-medium text-gray-300 max-lg:text-center">Created to change everything for the better. For everyone</p>
-          <Button href='/'>Shop Now</Button>
+          <Button href='/' variant='white'>Shop Now</Button>
         </div>
           <Image 
             src='/images/iphone16_1.png'
@@ -90,7 +90,7 @@ export default function Home() {
               width={300}
               className="lg:hidden"
             />
-          <div className="w-[60%] flex flex-col items-center gap-4 lg:items-start max-lg:mt-5">
+          <div className="w-[60%] flex flex-col items-center gap-4 lg:items-start max-lg:mt-5 z-5">
             <h3 className="text-4xl font-light max-lg:text-center lg:text-3xl">Apple AirPods <span className="font-medium">Max</span></h3>
             <p className="p-grid max-lg:text-center">Computational audio. Listen, it's powerful</p>
           </div>
