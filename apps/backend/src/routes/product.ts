@@ -7,6 +7,8 @@ router.get('/my-products', requireAuth, productController.getMyProducts);
 router.get('/', productController.getProducts);
 router.post('/batch', productController.getProductsByBatch);
 router.post('/add-product', requireAuth, productController.createProduct);
+router.get('/offer', productController.getOffer);
+router.get('/by-ids', productController.getProductByIds);
 router.get('/:slug', productController.getProduct);
 router.post('/search', productController.getSearchProduct);
 router.post('/delete-product', requireAuth, productController.deleteProduct);

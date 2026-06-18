@@ -168,7 +168,7 @@ const CheckoutForm = ({products, orderItems}: CheckoutFormProps) => {
                         </div>
                     </div>
                 ))}
-            </div>
+            </div> 
             <div className='flex justify-center mt-5 md:mt-12'>
                 {step === 'Address' && 
                     <MotionDiv className='flex flex-col'>

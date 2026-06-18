@@ -85,10 +85,10 @@ export const browseCategory = [
 ];
 
 export const homepageSlideOptions = [
-  {name: 'Popular Products', description: 'iPad combines a magnificent 10.2-inch Retina display, incredible performance, multitasking and ease of use.', img: '/images/', url: '/', bg: '', variant: 'black'},
-  {name: 'Ipad Pro', description: 'iPad combines a magnificent 10.2-inch Retina display, incredible performance, multitasking and ease of use.', img: '/images/', url: '/', bg: '', variant: 'black'},
-  {name: 'Samsung Galaxy ', description: 'iPad combines a magnificent 10.2-inch Retina display, incredible performance, multitasking and ease of use.', img: '/images/', url: '/', bg: '', variant: 'black'},
-  {name: 'Macbook Pro', description: 'iPad combines a magnificent 10.2-inch Retina display, incredible performance, multitasking and ease of use.', img: '/images/', url: '/', bg: '', variant: 'white'},
+  {name: 'Popular Products', description: 'iPad combines a magnificent 10.2-inch Retina display, incredible performance, multitasking and ease of use.', img: '/images/group-1.png', url: '/', bg: '#FFF', variant: 'black'},
+  {name: 'Ipad Pro', description: 'iPad combines a magnificent 10.2-inch Retina display, incredible performance, multitasking and ease of use.', img: '/images/group-2.png', url: '/', bg: '#F9F9F9', variant: 'black'},
+  {name: 'Samsung Galaxy ', description: 'iPad combines a magnificent 10.2-inch Retina display, incredible performance, multitasking and ease of use.', img: '/images/group-3.png', url: '/', bg: '#EAEAEA', variant: 'black'},
+  {name: 'Macbook Pro', description: 'iPad combines a magnificent 10.2-inch Retina display, incredible performance, multitasking and ease of use.', img: '/images/group-4.png', url: '/', bg: '#2C2C2C', variant: 'white'},
 ];
 
 export const catalogFilter: CatalogFilterConfig = {
@@ -213,4 +213,10 @@ export const shipmentMethod = [
   {name: 'Free', text: 'Regulary shipment', price: 0},
   {name: '$8.50', text: 'Get your delivery as soon as possible', price: 8.50},
   {name: 'Schedule', text: 'Pick a date when you want to get your delivery', price: 0},
+];
+
+export const HotOffersLinks = [
+  {name: 'New Arrival', tag:'new', dbName: 'new_arrival'},
+  {name: 'Bestseller', tag:'best', dbName: 'bestseller'},
+  {name: 'Featured Products', tag:'featured', dbName: 'featured_products'},
 ];

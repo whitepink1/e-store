@@ -3,6 +3,7 @@ import { Product } from "../models/Product";
 import { User } from '../models/User';
 import { deleteImagesFromCloud } from '../utils/actions';
 import { catalogFilter } from '../utils/data';
+import { Offer } from '../models/Offer';
 
 interface AuthenticatedRequest extends Request {
   user?: {
@@ -125,6 +126,48 @@ export const getProduct = async (req: Request, res: Response, next: NextFunction
     });
   } catch (err: any) {
     if (!err.statusCode) err.statusCode = 500;
+    return next(err);
+  }
+};
+
+export const getProductByIds = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const {ids} = req.query;
+
+    if(!ids || typeof ids !== 'string') {
+      return res.status(400).json({message: `${ids} Missing or invalid ids parameter.`})
+    };
+
+    const idArray = ids.split(',').filter(Boolean);
+
+    const products = await Product.find({
+      _id: {$in: idArray}
+    }).select('title slug category variants');
+
+    res.status(200).json({
+      message: 'Fetched products successfully.',
+      products: products,
+    });
+  } catch(err) {
+    return next(err);
+  }
+};
+
+export const getOffer = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const {type} = req.query;
+
+
+    if(!type || typeof type !== 'string') {
+      return res.status(400).json({message: 'Missing or invalid type parameter.'})
+    };
+    const productsId = await Offer.find({dbName: type});
+
+    res.status(200).json({
+      message: 'Fetched products successfully.!=',
+      offer: productsId,
+    });
+  } catch(err) {
     return next(err);
   }
 };

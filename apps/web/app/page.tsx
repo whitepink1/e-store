@@ -3,6 +3,8 @@ import Link from "next/link";
 import Button, { ButtonVariant } from "../components/shared/Button";
 import { browseCategory, homepageSlideOptions } from "../lib/data";
 import HotOffers from "../components/layouts/HotOffers";
+import Discounts from "../components/layouts/Discounts";
+import SpecialOffer from "../components/layouts/SpecialOffer";
 
 
 export default function Home() {
@@ -143,16 +145,30 @@ export default function Home() {
       </section>
       <HotOffers />
       <section className="">
-        <div className="hidden grid-cols-4 lg:grid">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
           {homepageSlideOptions.map(item => (
-            <div key={item.name} className="flex flex-col pb-14">
-              <h4>{item.name}</h4>
-              <p>{item.description}</p>
-              <Button href={item.url} variant={item.variant as ButtonVariant}>Shop Now</Button>
+            <div 
+              key={item.name} 
+              className="h-full group flex flex-col px-8 pb-14"
+              style={{ backgroundColor: item.bg }}>
+              <div className="relative w-[90%] mx-auto aspect-square">
+                <Image
+                src={item.img}
+                fill
+                alt={item.name}
+                className="object-contain"/>
+              </div>
+              <div className="self-end mt-auto flex flex-col max-sm:items-center">
+                <h4 className="text-3xl font-light leading-12 group-last:text-white">{item.name}</h4>
+                <p className="text-sm text-gray-300 font-medium leading-6 my-4">{item.description}</p>
+                <Button href={item.url} variant={item.variant as ButtonVariant}>Shop Now</Button>
+              </div>
             </div>
           ))}
         </div>
       </section>
+      <Discounts />
+      <SpecialOffer />
     </div>
   );
 }
