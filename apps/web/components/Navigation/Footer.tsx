@@ -5,7 +5,7 @@ import Image from 'next/image';
 
 const Footer = () => {
   return (
-    <div className='bg-black px-8 py-12 lg:py-26 lg:px-40'>
+    <div className='bg-black px-8 py-12 lg:py-26 lg:px-40 z-5'>
         <div className='flex flex-col justify-start items-center gap-8 lg:flex-row lg:justify-between lg:items-start'>
             <div className='flex flex-col items-center gap-4 lg:items-start'>
                 <Image src='/icon/logo_white.png' height={32} width={96} alt="Cyber Logo"/>

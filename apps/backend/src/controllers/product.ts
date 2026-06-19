@@ -165,7 +165,7 @@ export const getOffer = async (req: Request, res: Response, next: NextFunction) 
 
     res.status(200).json({
       message: 'Fetched products successfully.!=',
-      offer: productsId,
+      offer: productsId || [],
     });
   } catch(err) {
     return next(err);

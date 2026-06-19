@@ -47,8 +47,8 @@ const page = async ({ params, searchParams }: PageProps) => {
 
   return (
     <div>
-      <Button backforward={true} className='absolute -translate-y-1/2 z-15' variant='black'>Back</Button>
-      <section className='w-full flex justify-center gap-20 lg:gap-40 max-lg:mt-10 max-md:flex-col max-md:items-center'>
+      <Button backforward={true} className='absolute -translate-y-14 right-3 z-15 lg:hidden md:-translate-y-12' variant='black'>Back</Button>
+      <section className='w-full flex justify-center gap-20 lg:gap-40 max-lg:mt-15 max-md:flex-col max-md:items-center'>
         <div className='relative w-100 h-125 max-sm:w-[90%]'>
           <Image
             src={selectedVariant?.images[0] || ''}

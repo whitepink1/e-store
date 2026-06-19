@@ -4,6 +4,8 @@ import { HotOffersLinks } from '../../lib/data';
 import { getOffer, getProductByIdsAction } from '../../app/actions/product';
 import { getFavouriteAction } from '../../app/actions/user';
 import ProductCatalogCard from '../Products/ProductCatalogCard';
+import ProductCatalogCardSkeleton from '../Products/ProductCatalogCardSkeleton';
+import MotionDiv from '../Motion/MotionDiv';
 
 type HotOffersType = 'new' | 'best' | 'featured';
 type ProductDataFromCard = React.ComponentProps<typeof ProductCatalogCard>['product'];
@@ -16,6 +18,7 @@ const HotOffers = () => {
 
   useEffect(() => {
     const handleIds = async () => {
+      setProducts([]);
       setIsLoading(true);
       try {  
         const productIds = await getOffer(actualSection);
@@ -57,11 +60,9 @@ const HotOffers = () => {
           </button>
         ))}
       </div>
-      <div className='grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4'>
+      <MotionDiv key={actualSection} delay={0.3} variant="fadeUp" className='grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4'>
         {isLoading ? (
-          <p className="col-span-full text-xl text-center py-12 text-gray-400 animate-pulse">
-            Loading products...
-          </p>
+            Array.from({ length: 8 }).map((_, i) => <ProductCatalogCardSkeleton key={i} />)
         ) :
          products && products.length > 0 ? 
             products.map((product: ProductDataFromCard) => {
@@ -74,7 +75,7 @@ const HotOffers = () => {
               No products found matching your requests
             </p>
           }
-      </div>
+      </MotionDiv>
     </section>
   )
 }
