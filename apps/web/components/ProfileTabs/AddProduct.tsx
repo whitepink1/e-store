@@ -168,7 +168,8 @@ const AddProduct = () => {
         const price = Number(getValues(`variants.${index}.price`)) || 0;
         const discount = Number(getValues(`variants.${index}.discount`)) || 0;
         
-        const final = Math.max(0, price - discount);
+        const calculatedFinal = price - (price * (discount / 100));
+        const final = Math.max(0, Math.round(calculatedFinal));
 
         setValue(`variants.${index}.finalPrice`, final, { 
             shouldValidate: true 
@@ -232,7 +233,8 @@ const AddProduct = () => {
                 )}
                 {selectedCategory === 'smartwatches' && (
                 <div className="grid grid-cols-3 gap-4">
-                    <input {...register('filterAttributes.case_size')} 
+                    <input {...register('filterAttributes.case_size', { valueAsNumber: true })} 
+                        type='number'
                         placeholder="Case size" 
                         className={`border p-2 ${(errors.filterAttributes as any)?.case_size && 'border-red-500/75'}`}/>
                     <input {...register('filterAttributes.display_type')} 
@@ -248,8 +250,9 @@ const AddProduct = () => {
                     <input {...register('filterAttributes.sensor_type')} 
                         placeholder="Sensor Type" 
                         className={`border p-2 ${(errors.filterAttributes as any)?.sensor_type && 'border-red-500/75'}`}/>
-                    <input {...register('filterAttributes.effective_pixels')} 
-                        placeholder="Effective Pixels" 
+                    <input {...register('filterAttributes.effective_pixels', { valueAsNumber: true })} 
+                        placeholder="Effective Pixels"
+                        type='number'
                         className={`border p-2 ${(errors.filterAttributes as any)?.effective_pixels && 'border-red-500/75'}`}/>
                     <input {...register('filterAttributes.video_resolution')} 
                         placeholder="Video Resolution" 

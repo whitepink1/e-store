@@ -21,7 +21,7 @@ const Discounts = async () => {
                     products.data.map((product: ProductDataFromCard) => {
                     const isFavourite = product._id ? favourites.includes(product._id) : false;
                     return(
-                        <ProductCatalogCard key={product.slug} product={product} initialIsFavourite={isFavourite}/>
+                        <ProductCatalogCard sale={true} key={product.slug} product={product} initialIsFavourite={isFavourite}/>
                     )})
                 :
                     <p className="col-span-full text-xl text-center py-12 text-gray-300">

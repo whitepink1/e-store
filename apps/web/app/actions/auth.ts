@@ -83,7 +83,7 @@ export async function loginAction(formData: any) {
             cookieStore.set('session_token', result.token, {
                 httpOnly: true,
                 secure: process.env.NODE_ENV === 'production',
-                maxAge: 60 * 60,
+                maxAge: 60 * 60 * 2,
                 path: '/',
             });
 

@@ -8,6 +8,7 @@ import SpecialOffer from "../components/layouts/SpecialOffer";
 
 
 export default function Home() {
+  const clientURL = process.env.EXTERNAL_CLIENT_URL;
   return (
     <div>
       <section className="flex flex-col justify-between px-basic bg-main-dark lg:flex-row lg:pt-15">
@@ -15,7 +16,7 @@ export default function Home() {
           <p className="text-2xl font-semibold text-gray-300 max-lg:text-center">Pro.Beyond.</p>
           <p className="text-7xl font-extralight text-white lg:text-8xl max-lg:text-center">IPhone 16 <span className="font-semibold">Pro</span></p>
           <p className="text-lg font-medium text-gray-300 max-lg:text-center">Created to change everything for the better. For everyone</p>
-          <Button href='/' variant='white'>Shop Now</Button>
+          <Button href={`${clientURL}/catalog/smartphones/apple-iphone-16-pro`} variant='white'>Shop Now</Button>
         </div>
           <Image 
             src='/images/iphone16_1.png'
@@ -58,7 +59,7 @@ export default function Home() {
           <div className="w-[80%] flex flex-col items-center gap-4 lg:items-start md:w-[50%] max-lg:mt-5">
             <h3 className="text-4xl font-light lg:text-6xl">Macbook <span className="font-medium">Air</span></h3>
             <p className="p-grid">The new 15‑inch MacBook Air makes room for more of what you love with a spacious Liquid Retina display.</p>
-            <Button href="/" variant="black">Shop Now</Button>
+            <Button href={`${clientURL}/catalog/computers/apple-macbook-air-136-m5-2026`} variant="black">Shop Now</Button>
           </div>
           <div className="w-[90%] h-[90%] hidden absolute right-0 translate-x-1/2 lg:block"> 
             <Image 

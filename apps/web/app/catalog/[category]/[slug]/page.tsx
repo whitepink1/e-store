@@ -5,7 +5,6 @@ import { notFound } from 'next/navigation';
 import ProductConfiguration from '../../../../components/Products/ProductConfiguration';
 import { catalogFilter, deliveryDetailed } from '../../../../lib/data';
 import ProductSpecification from '../../../../components/Products/ProductSpecification';
-import RatingComponent from '../../../../components/Products/RatingComponent';
 import { getCartAction, getFavouriteAction } from '../../../actions/user';
 import FavouriteButton from '../../../../components/Products/FavouriteButton';
 import CartButton from '../../../../components/Products/CartButton';
@@ -109,7 +108,6 @@ const page = async ({ params, searchParams }: PageProps) => {
         <p className='text-sm text-gray-65 font-medium my-8'>{product.mainDescription}</p>
         <ProductSpecification specifications={product.specifications}/>
       </section>
-      <RatingComponent />
     </div>
   )
 }

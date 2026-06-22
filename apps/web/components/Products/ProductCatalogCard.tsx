@@ -8,9 +8,10 @@ import { useRouter } from 'next/navigation';
 
 interface ExtendedProductCardProps extends ProductCardProps {
     initialIsFavourite?: boolean;
+    sale?: boolean;
 }
 
-const ProductCatalogCard = ({product, initialIsFavourite = false}: ExtendedProductCardProps) => {
+const ProductCatalogCard = ({sale = false, product, initialIsFavourite = false}: ExtendedProductCardProps) => {
     const [isFavourite, setIsFavourite] = useState(initialIsFavourite);
     const router = useRouter();
 
@@ -42,14 +43,18 @@ const ProductCatalogCard = ({product, initialIsFavourite = false}: ExtendedProdu
             <div className='relative w-50 h-50'>
                 <Image
                     src={product.variants[0]?.images[0] || ''}
-                    // height={180}
-                    // width={180}
                     fill
                     alt={product.title}
                     className='object-contain'/>
             </div>
-            <p className='font-medium text-base leading-6'>{product.title}</p>
-            <p className='font-semibold text-2xl'>$ {product.variants[0]?.finalPrice}</p>
+            <p className='font-medium text-base leading-6 text-center'>{product.title}</p>
+            {sale ? 
+                <div className='my-2'>
+                   <p className='font-semibold text-xl'>$ {product.variants[0]?.finalPrice}</p> 
+                   <p className='text-center font-semibold text-base text-gray-20 line-through'>$ {product.variants[0]?.price}</p> 
+                </div>
+            :
+                <p className='font-semibold text-2xl'>$ {product.variants[0]?.finalPrice}</p>}
             <Button 
                 href={`/catalog/${product.category}/${product.slug}`}
                 variant='blackFill'>Buy Now</Button>

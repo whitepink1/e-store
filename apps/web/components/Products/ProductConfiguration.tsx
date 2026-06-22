@@ -31,11 +31,14 @@ const ProductConfiguration = ({variants, configuration}: PropsVariants) => {
     const currentVariant = variants[urlIndex] || variants[0];
     const [selectedColor, setSelectedColor] = useState(currentVariant?.color);
     const [selectedStorage, setSelectedStorage] = useState(currentVariant?.storage || 0);
+    const [selectedRam, setSelectedRam] = useState(currentVariant?.ram || 0);
 
 
     useEffect(() => {
         if (currentVariant) {
-        setSelectedColor(currentVariant.color);
+            setSelectedColor(currentVariant.color);
+            setSelectedStorage(currentVariant.storage || 0);
+            setSelectedRam(currentVariant.ram || 0);
         }
     }, [urlIndex, currentVariant]);
     
@@ -63,7 +66,20 @@ const ProductConfiguration = ({variants, configuration}: PropsVariants) => {
         router.replace(`${pathname}?${params.toString()}`, { scroll: false });
     };
 
+    const HandleRamVariant = (item: number) => {
+        if (item === selectedRam) return;
+        setSelectedRam(item);
+
+        const selectedVariantIndex = variants.findIndex(v => v.ram === item && v.color === selectedColor && v.storage === selectedStorage);
+
+        const params = new URLSearchParams(searchParams.toString());
+        params.set('v', selectedVariantIndex.toString());
+
+        router.replace(`${pathname}?${params.toString()}`, { scroll: false });
+    };
+
     const uniqueColors = [...new Set(variants.map(i => i.color))];
+    const uniqueStorage = [...new Set(variants.filter(v => v.color.toLowerCase() === selectedColor?.toLowerCase() && v.storage).map(v => v.storage as number))].sort((a, b) => a - b);
     
     return (
         <div className='flex flex-col gap-6'>
@@ -87,21 +103,39 @@ const ProductConfiguration = ({variants, configuration}: PropsVariants) => {
             </div>
             {configuration.storage && 
             <div className='flex justify-start gap-4'>
-                {variants.filter(v => v.color.toLocaleLowerCase() === selectedColor?.toLocaleLowerCase()).map((item, index) => {
+                {uniqueStorage.map((storageValue, index) => {
                     return (
                         <button 
                             key={index}
-                            onClick={() => HandleStorageVariant(item.storage ? item.storage : 0)}
+                            onClick={() => HandleStorageVariant(storageValue ? storageValue : 0)}
                             className={`w-23 h-12 font-medium text-sm rounded-lg border transition-all hover:scale-105
-                            ${selectedStorage === item.storage 
+                            ${selectedStorage === storageValue 
                                 ? 'scale-105' 
                                 : 'shadow-sm text-gray-15'
                             }`}>
-                            {item.storage} {item.storage && item.storage > 127 ? 'GB' : 'TB'}
+                            {storageValue} GB
                         </button>
                     )
                 })}
             </div>}
+            {configuration.ram && 
+                <div className='flex justify-start gap-4'>
+                    {variants.filter(v => v.color.toLocaleLowerCase() === selectedColor?.toLocaleLowerCase() && v.storage === selectedStorage).map((item, index) => {
+                        return (
+                            <button 
+                                key={index}
+                                onClick={() => HandleRamVariant(item.ram ? item.ram : 0)}
+                                className={`w-23 h-12 font-medium text-sm rounded-lg border transition-all hover:scale-105
+                                ${selectedRam === item.ram 
+                                    ? 'scale-105' 
+                                    : 'shadow-sm text-gray-15'
+                                }`}>
+                                {item.ram} GB
+                            </button>
+                        )
+                    })}
+                </div>
+            }
         </div>
     )
 }

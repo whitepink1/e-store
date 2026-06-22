@@ -22,7 +22,7 @@ const SpecificationSchema = new Schema({
 
 
 const ProductMongooseSchema = new Schema({
-  _id: {type: Schema.Types.ObjectId},
+  // _id: {type: Schema.Types.ObjectId},
   category: { 
     type: String, 
     required: true, 
