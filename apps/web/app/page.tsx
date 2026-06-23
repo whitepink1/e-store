@@ -14,7 +14,7 @@ export default function Home() {
       <section className="flex flex-col justify-between px-basic bg-main-dark lg:flex-row lg:pt-15">
         <div className="flex flex-col items-center gap-6 my-auto lg:items-start max-lg:pt-22">
           <p className="text-2xl font-semibold text-gray-300 max-lg:text-center">Pro.Beyond.</p>
-          <p className="text-7xl font-extralight text-white lg:text-8xl max-lg:text-center">IPhone 16 <span className="font-semibold">Pro</span></p>
+          <p className="text-7xl font-thin text-white lg:text-8xl max-lg:text-center">IPhone 16 <span className="font-semibold">Pro</span></p>
           <p className="text-lg font-medium text-gray-300 max-lg:text-center">Created to change everything for the better. For everyone</p>
           <Button href={`${clientURL}/catalog/smartphones/apple-iphone-16-pro`} variant='white'>Shop Now</Button>
         </div>

@@ -1,22 +1,19 @@
 import type { Metadata } from "next";
-import localFont from "next/font/local";
+import { Inter } from 'next/font/google';
 import "./globals.css";
 import { cookies } from 'next/headers';
 import Header from "../components/Navigation/Header";
 import Footer from "../components/Navigation/Footer";
 
-const geistSans = localFont({
-  src: "./fonts/GeistVF.woff",
-  variable: "--font-geist-sans",
-});
-const geistMono = localFont({
-  src: "./fonts/GeistMonoVF.woff",
-  variable: "--font-geist-mono",
+
+const inter = Inter({
+  subsets: ['latin'],
+  display: 'swap',
 });
 
 export const metadata: Metadata = {
   title: "E-Store",
-  description: "...",
+  description: "Pet project E-store, created by kiruhat",
 };
 
 export default async function RootLayout({
@@ -27,8 +24,8 @@ export default async function RootLayout({
   const cookieStore = await cookies();
   const isLoggedIn = !!cookieStore.get('session_token')?.value;
   return (
-    <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable} flex flex-col min-h-screen`}>
+    <html lang="en" className={inter.className}>
+      <body className='flex flex-col min-h-screen'>
         <Header isLoggedIn={isLoggedIn}/>
         <main className="grow">
           {children}
