@@ -2,6 +2,10 @@
 
 A high-performance, production-ready e-commerce web application for purchasing tech gadgets. This project is structured as a monorepo utilizing **Turborepo** to orchestrate seamless development workflows across the frontend and backend applications.
 
+## 🔗 [🚀 Live Demo: whitepink-e-store.netlify.app](https://whitepink-e-store.netlify.app/)
+
+---
+
 <img width="2880" height="3250" alt="main_md" src="https://github.com/user-attachments/assets/3ca39a4a-73d0-463b-b4ab-a4484f641038" />
 
 ---
