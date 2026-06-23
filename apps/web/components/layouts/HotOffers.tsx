@@ -62,7 +62,7 @@ const HotOffers = () => {
       </div>
       <MotionDiv key={actualSection} delay={0.3} variant="fadeUp" className='grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4'>
         {isLoading ? (
-            Array.from({ length: 8 }).map((_, i) => <ProductCatalogCardSkeleton key={i} />)
+            Array.from({ length: 4 }).map((_, i) => <ProductCatalogCardSkeleton key={i} />)
         ) :
          products && products.length > 0 ? 
             products.map((product: ProductDataFromCard) => {
