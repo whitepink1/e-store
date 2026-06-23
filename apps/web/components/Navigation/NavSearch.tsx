@@ -44,7 +44,6 @@ const NavSearch = () => {
         const response = await getSearchProductsAction(search);
         if (response?.success) {
           setResults(response.products || []);
-          console.log('Result: ', response)
           setIsOpen(true);
         }
       } catch (error) {

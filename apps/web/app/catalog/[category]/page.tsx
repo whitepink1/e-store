@@ -82,11 +82,6 @@ const GridSkeleton = () => (
 const CatalogPage = async ({params, searchParams} : CatalogPageProps) => {
   const { category } = await params;
   const currentSearchParams = await searchParams;
-  const response = await getProductsAction({
-    category,
-    filters: currentSearchParams
-  });
-  console.log(response);
   const currentFilter = catalogFilter[category];
   const brandFields = CATEGORY_BRANDS[category as keyof typeof CATEGORY_BRANDS] 
   ? [...CATEGORY_BRANDS[category as keyof typeof CATEGORY_BRANDS]] 

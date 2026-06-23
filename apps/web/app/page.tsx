@@ -171,5 +171,5 @@ export default function Home() {
       <Discounts />
       <SpecialOffer />
     </div>
-  );
+  ); 
 }

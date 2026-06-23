@@ -22,7 +22,6 @@ const Favourite = () => {
     
                 if (result.success && result.data) {
                     setProducts(result.data);
-                    console.log('Data: ', result.data);
                 } else {
                     throw new Error(result.message || "Didn't found any product.");
                 }
