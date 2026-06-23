@@ -1,159 +1,109 @@
-# Turborepo starter
+# Full-Stack Tech E-Commerce Platform (Monorepo)
 
-This Turborepo starter is maintained by the Turborepo core team.
+A high-performance, production-ready e-commerce web application for purchasing tech gadgets. This project is structured as a monorepo utilizing **Turborepo** to orchestrate seamless development workflows across the frontend and backend applications.
 
-## Using this example
+<img width="2880" height="3250" alt="main_md" src="https://github.com/user-attachments/assets/3ca39a4a-73d0-463b-b4ab-a4484f641038" />
 
-Run the following command:
+---
+<img width="2880" height="3250" alt="catalog" src="https://github.com/user-attachments/assets/15e00a02-1aad-40fb-ab0d-a55976f2fc11" />
 
-```sh
-npx create-turbo@latest
+---
+<img width="2880" height="3250" alt="product" src="https://github.com/user-attachments/assets/6aa9aae9-bda5-490f-9b74-2c4e08255484" />
+
+
+---
+
+## 📂 Repository Structure
+
+This workspace is managed using Turborepo:
+* **`apps/web`** - The Next.js client application (App Router, Tailwind CSS, Framer Motion).
+* **`apps/backend`** - The Node.js & Express server application (Mongoose, MongoDB).
+* **`packages/`** - Shared tooling and configurations (ESLint, TypeScript, Tailwind configurations).
+
+---
+
+## 🚀 Core Features
+
+### 🌐 Frontend Client (`apps/web`)
+* **Dynamic Product Catalog:** Filter items seamlessly by tab-based categories ("New", "Best", "Featured") or drill down using category-specific specifications (e.g., Battery Capacity, RAM, Screen Diagonal).
+* **Multi-Variant Configurations:** Instantly switch between hardware attributes (Storage/RAM) and colors on the product details page. URL query parameters (`?v=index`) dynamically control application states, maintaining consistent navigation depth and preventing item duplication.
+* **Smart Discount Calculator:** Real-time percentage discount visualizer ensuring customers see exact absolute saving calculations and final pricing without round-off artifacts.
+* **Fluid UI & Animations:** Powered by Framer Motion to create smooth staggered layout transitions, interactive tab-switching effects, and responsive layout feedback.
+* **Favorites System:** Persistent client-side layout structures for custom favorited product tracking.
+
+### ⚙️ Backend Server (`apps/backend`)
+* **Comprehensive Product Architecture:** Accommodates extensive technical parameters matching various technical groups (smartphones, smartwatches, laptops) with optimized Mongoose schema models.
+* **Data Validation Pipelines:** Rigorous request validation utilizing `Zod` schemas coupled with explicit type guards matching client expectations.
+* **Cloudinary Media Engine:** Direct dynamic image upload handling combined with automated background asset cleanups when deleting or overwriting specific items.
+* **Session Security:** Secure token-based cookies (`httpOnly`, `secure`) configuration keeping server operations decoupled and protected.
+
+---
+
+## 🛠️ Monorepo Tech Stack
+
+* **Frameworks:** Next.js 14+ (App Router), Express.js
+* **Monorepo Tooling:** Turborepo
+* **Language:** TypeScript (Strict Mode)
+* **Styling & Animation:** Tailwind CSS, Framer Motion (`motion/react`)
+* **Database & ORM:** MongoDB Atlas, Mongoose
+* **Form & Validation:** React Hook Form, Zod
+
+---
+## 🎨 Design Acknowledgments
+
+Special thanks to **Mayank** for the incredible UI/UX concept design. You can explore the original Figma community file here:
+* [🔗 Tech E-Commerce Design on Figma Community](https://www.figma.com/community/file/1362344995738653261)
+---
+
+## 📦 Getting Started
+
+### Prerequisites
+* Node.js (v18 or higher)
+* Active MongoDB Instance
+* Cloudinary Developer Account
+
+### Global Installation & Local Setup
+
+1. **Clone the repository:**
+```bash
+git clone [https://github.com/whitepink1/e-store.git](https://github.com/whitepink1/e-store.git)
+cd e-store
+```
+Install all workspace dependencies:
+
+```bash
+npm install
 ```
 
-## What's inside?
+Configure Environment Variables:
 
-This Turborepo includes the following packages/apps:
+1.1 ****Create a .env.local file inside apps/web/:****
 
-### Apps and Packages
-
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `@repo/ui`: a stub React component library shared by both `web` and `docs` applications
-- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
-
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
-
-### Utilities
-
-This Turborepo has some additional tools already setup for you:
-
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
-
-### Build
-
-To build all apps and packages, run the following command:
-
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended):
-
-```sh
-cd my-turborepo
-turbo build
+```Code snippet
+NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME=your_cloud_name
+NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET=folder_name(for exp. 'e-store')
+CLOUDINARY_API_KEY=api_key
+CLOUDINARY_API_SECRET=your_secret_key
+EXTERNAL_BACKEND_URL=http://localhost:5000
+EXTERNAL_CLIENT_URL=http://localhost:3000
+JWT_SECRET=your_secret_key(for exp. 'super_secret')
+JWT_CHECKOUT_SECRET=your_checkout_secret_key(for exp. 'super_checkout_secret')
 ```
 
-Without global `turbo`, use your package manager:
+1.2 ****Create a .env file inside apps/backend/:****
 
-```sh
-cd my-turborepo
-npx turbo build
-pnpm dlx turbo build
-pnpm exec turbo build
+```Code snippet
+PORT=5000
+DATABASE_URL=mongodb+srv://<username>:<password>@cluster.mongodb.net/tech-store
+JWT_SECRET=same_key_from_frontend
+JWT_CHECKOUT_SECRET=same_key_from_frontend
+STRIPE_SECRET_KEY=your_stripe_secret_key
+CLIENT_URL=http://localhost:3000
+PUBLIC_PRODUCTS_PER_PAGE=amount_of_products_per_page(for exp. '5')
 ```
 
-You can build a specific package by using a [filter](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters):
+Run the entire ecosystem simultaneously:
 
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed:
-
-```sh
-turbo build --filter=docs
+```bash
+npm run dev
 ```
-
-Without global `turbo`:
-
-```sh
-npx turbo build --filter=docs
-pnpm exec turbo build --filter=docs
-pnpm exec turbo build --filter=docs
-```
-
-### Develop
-
-To develop all apps and packages, run the following command:
-
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended):
-
-```sh
-cd my-turborepo
-turbo dev
-```
-
-Without global `turbo`, use your package manager:
-
-```sh
-cd my-turborepo
-npx turbo dev
-pnpm exec turbo dev
-pnpm exec turbo dev
-```
-
-You can develop a specific package by using a [filter](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters):
-
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed:
-
-```sh
-turbo dev --filter=web
-```
-
-Without global `turbo`:
-
-```sh
-npx turbo dev --filter=web
-pnpm exec turbo dev --filter=web
-pnpm exec turbo dev --filter=web
-```
-
-### Remote Caching
-
-> [!TIP]
-> Vercel Remote Cache is free for all plans. Get started today at [vercel.com](https://vercel.com/signup?utm_source=remote-cache-sdk&utm_campaign=free_remote_cache).
-
-Turborepo can use a technique known as [Remote Caching](https://turborepo.dev/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
-
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup?utm_source=turborepo-examples), then enter the following commands:
-
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended):
-
-```sh
-cd my-turborepo
-turbo login
-```
-
-Without global `turbo`, use your package manager:
-
-```sh
-cd my-turborepo
-npx turbo login
-pnpm exec turbo login
-pnpm exec turbo login
-```
-
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
-
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
-
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed:
-
-```sh
-turbo link
-```
-
-Without global `turbo`:
-
-```sh
-npx turbo link
-pnpm exec turbo link
-pnpm exec turbo link
-```
-
-## Useful Links
-
-Learn more about the power of Turborepo:
-
-- [Tasks](https://turborepo.dev/docs/crafting-your-repository/running-tasks)
-- [Caching](https://turborepo.dev/docs/crafting-your-repository/caching)
-- [Remote Caching](https://turborepo.dev/docs/core-concepts/remote-caching)
-- [Filtering](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters)
-- [Configuration Options](https://turborepo.dev/docs/reference/configuration)
-- [CLI Usage](https://turborepo.dev/docs/reference/command-line-reference)
